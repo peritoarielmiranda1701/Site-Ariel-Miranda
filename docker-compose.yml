@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      - Peritonet_Public
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=Peritonet_Public"
+        - "traefik.http.routers.site-ariel.rule=Host(`peritoarielmiranda.com.br`) || Host(`www.peritoarielmiranda.com.br`)"
+        - "traefik.http.routers.site-ariel.entrypoints=websecure"
+        - "traefik.http.routers.site-ariel.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.site-ariel.loadbalancer.server.port=80"
+
+networks:
+  Peritonet_Public:
+    external: true
