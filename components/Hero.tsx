@@ -6,27 +6,83 @@ import { SectionId } from '../types';
 // Esta imagem remete a engenharia elétrica e industrial
 const HERO_IMAGE = "https://images.unsplash.com/photo-1621905251189-08b95d50c79f?auto=format&fit=crop&q=80&w=1920";
 
-const Hero: React.FC = () => {
+interface HeroProps {
+  data?: {
+    title?: string;
+    subtitle?: string;
+    cta?: string;
+    bg?: string;
+  }
+}
+
+const Hero: React.FC<HeroProps> = ({ data }) => {
+  // Determine background image
+  const bgImage = data?.bg
+    ? `https://admin.peritoarielmiranda.com.br/assets/${data.bg}`
+    : HERO_IMAGE;
+
+  // Extract specific parts matching the 'bold/gold' syntax
+  const renderRichText = (text: string, isTitle: boolean = false) => {
+    if (!text) return null;
+
+    // Split by newlines first
+    const lines = text.split('\n');
+
+    return lines.map((line, lineIndex) => {
+      // For each line, parse *bold* segments
+      const parts = line.split(/(\*[^*]+\*)/g); // split by *text*
+
+      return (
+        <React.Fragment key={lineIndex}>
+          {lineIndex > 0 && <br />}
+          {parts.map((part, partIndex) => {
+            if (part.startsWith('*') && part.endsWith('*')) {
+              const content = part.slice(1, -1);
+              if (isTitle) {
+                return (
+                  <span key={partIndex} className="text-gradient-gold drop-shadow-2xl">
+                    {content}
+                  </span>
+                );
+              } else {
+                return (
+                  <strong key={partIndex} className="text-white font-medium">
+                    {content}
+                  </strong>
+                );
+              }
+            }
+            return part;
+          })}
+        </React.Fragment>
+      );
+    });
+  };
+
+  const defaultTitle = "Excelência Técnica a\n*Serviço da Verdade*";
+  const defaultSubtitle = "*Perito Ariel Miranda* — Especialista em perícias judiciais e extrajudiciais.";
+  const defaultSubtitle2 = "Laudos técnicos em Engenharia Elétrica, Segurança do Trabalho e Forense Digital.";
+
   return (
-    <section 
-      id={SectionId.HOME} 
+    <section
+      id={SectionId.HOME}
       className="relative min-h-[95vh] flex items-center pt-24 pb-20 overflow-hidden"
     >
       {/* Background with Static Image */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-navy-950"
-        style={{ backgroundImage: `url('${HERO_IMAGE}')` }}
+        style={{ backgroundImage: `url('${bgImage}')` }}
       ></div>
-      
+
       {/* Heavy Overlay for Legibility - Gradient Improved */}
       <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/90 to-navy-900/40 z-0"></div>
-      
+
       {/* Decorative Gold Line */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold-300 via-gold-500 to-gold-300 z-20"></div>
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
-          
+
           <div className="flex-1 space-y-10 max-w-4xl">
             {/* Badge */}
             <div className="reveal flex items-start">
@@ -38,38 +94,37 @@ const Hero: React.FC = () => {
                 Atendimento Nacional 24h
               </div>
             </div>
-            
+
             {/* Title */}
             <div className="reveal reveal-delay-100">
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading font-black leading-[1.05] text-white tracking-tight">
-                Excelência Técnica a <br />
-                <span className="text-gradient-gold drop-shadow-2xl">
-                  Serviço da Verdade
-                </span>
+                {renderRichText(data?.title || defaultTitle, true)}
               </h1>
             </div>
-            
+
             {/* Description */}
             <div className="reveal reveal-delay-200 pl-8 border-l-4 border-gold-500">
               <p className="text-slate-300 text-lg md:text-xl leading-relaxed font-light max-w-2xl">
-                <strong className="text-white font-medium">Perito Ariel Miranda</strong> — Especialista em perícias judiciais e extrajudiciais.
+                {renderRichText(data?.subtitle || defaultSubtitle)}
               </p>
-              <p className="text-slate-400 text-sm md:text-base mt-2 font-light">
-                Laudos técnicos em Engenharia Elétrica, Segurança do Trabalho e Forense Digital.
-              </p>
+              {!data?.subtitle && (
+                <p className="text-slate-400 text-sm md:text-base mt-2 font-light">
+                  {defaultSubtitle2}
+                </p>
+              )}
             </div>
-            
+
             {/* CTA Buttons */}
             <div className="reveal reveal-delay-300 flex flex-col sm:flex-row gap-5 pt-4">
-              <a 
-                href="#contact" 
+              <a
+                href="#contact"
                 className="shine-effect group inline-flex items-center justify-center gap-3 px-10 py-5 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-white font-heading font-bold uppercase tracking-widest rounded-md transition-all transform hover:-translate-y-1 shadow-2xl shadow-gold-900/30 text-xs md:text-sm"
               >
-                Solicitar Orçamento
+                {data?.cta || 'Solicitar Orçamento'}
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </a>
-              <a 
-                href="#services" 
+              <a
+                href="#services"
                 className="group inline-flex items-center justify-center gap-3 px-10 py-5 bg-transparent border border-white/10 hover:border-gold-400/50 hover:bg-white/5 text-white font-heading font-bold uppercase tracking-widest rounded-md transition-all text-xs md:text-sm backdrop-blur-sm"
               >
                 Nossos Serviços
@@ -78,54 +133,54 @@ const Hero: React.FC = () => {
 
             {/* Trust Indicators */}
             <div className="reveal reveal-delay-400 pt-6 flex items-center gap-8 text-slate-400 text-[10px] md:text-xs font-bold uppercase tracking-widest opacity-80">
-               <div className="flex items-center gap-2">
-                 <ShieldCheck className="text-gold-500" size={16} />
-                 <span>Rigor Científico</span>
-               </div>
-               <div className="flex items-center gap-2">
-                 <Scale className="text-gold-500" size={16} />
-                 <span>Assistência Técnica</span>
-               </div>
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="text-gold-500" size={16} />
+                <span>Rigor Científico</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Scale className="text-gold-500" size={16} />
+                <span>Assistência Técnica</span>
+              </div>
             </div>
           </div>
 
           {/* Floating Cards Graphic */}
           <div className="hidden lg:block w-full max-w-sm relative reveal reveal-delay-200 animate-float">
-             {/* Abstract Decor Elements */}
-             <div className="absolute -top-20 -right-20 w-80 h-80 bg-gold-500/20 rounded-full blur-[100px]"></div>
-             <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-blue-500/10 rounded-full blur-[100px]"></div>
+            {/* Abstract Decor Elements */}
+            <div className="absolute -top-20 -right-20 w-80 h-80 bg-gold-500/20 rounded-full blur-[100px]"></div>
+            <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-blue-500/10 rounded-full blur-[100px]"></div>
 
-             <div className="relative grid grid-cols-1 gap-8">
-                <div className="bg-navy-900/40 backdrop-blur-md border border-white/10 p-8 rounded-lg shadow-2xl">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="bg-gradient-to-br from-gold-400 to-gold-600 p-3.5 rounded-lg text-white shadow-lg shadow-gold-500/20">
-                      <Zap size={28} />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-bold font-heading text-lg">Laudos Técnicos</h3>
-                      <p className="text-gold-400 text-[10px] font-bold uppercase tracking-widest">Precisão & Técnica</p>
-                    </div>
+            <div className="relative grid grid-cols-1 gap-8">
+              <div className="bg-navy-900/40 backdrop-blur-md border border-white/10 p-8 rounded-lg shadow-2xl">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="bg-gradient-to-br from-gold-400 to-gold-600 p-3.5 rounded-lg text-white shadow-lg shadow-gold-500/20">
+                    <Zap size={28} />
                   </div>
-                  <p className="text-slate-300 text-xs leading-relaxed font-light">
-                    Emissão de pareceres fundamentados para processos judiciais e extrajudiciais com validade jurídica.
-                  </p>
-                </div>
-                
-                <div className="bg-navy-900/40 backdrop-blur-md border border-white/10 p-8 rounded-lg shadow-2xl translate-x-12">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="bg-gradient-to-br from-navy-500 to-navy-700 p-3.5 rounded-lg text-white shadow-lg">
-                      <Scale size={28} />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-bold font-heading text-lg">Multidisciplinar</h3>
-                      <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Engenharia & Forense</p>
-                    </div>
+                  <div>
+                    <h3 className="text-white font-bold font-heading text-lg">Laudos Técnicos</h3>
+                    <p className="text-gold-400 text-[10px] font-bold uppercase tracking-widest">Precisão & Técnica</p>
                   </div>
-                   <p className="text-slate-300 text-xs leading-relaxed font-light">
-                    Atuação em Engenharia Elétrica, Segurança do Trabalho e Forense Digital em todo o Brasil.
-                  </p>
                 </div>
-             </div>
+                <p className="text-slate-300 text-xs leading-relaxed font-light">
+                  Emissão de pareceres fundamentados para processos judiciais e extrajudiciais com validade jurídica.
+                </p>
+              </div>
+
+              <div className="bg-navy-900/40 backdrop-blur-md border border-white/10 p-8 rounded-lg shadow-2xl translate-x-12">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="bg-gradient-to-br from-navy-500 to-navy-700 p-3.5 rounded-lg text-white shadow-lg">
+                    <Scale size={28} />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold font-heading text-lg">Multidisciplinar</h3>
+                    <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Engenharia & Forense</p>
+                  </div>
+                </div>
+                <p className="text-slate-300 text-xs leading-relaxed font-light">
+                  Atuação em Engenharia Elétrica, Segurança do Trabalho e Forense Digital em todo o Brasil.
+                </p>
+              </div>
+            </div>
           </div>
 
         </div>

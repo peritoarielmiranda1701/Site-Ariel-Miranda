@@ -1,9 +1,13 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { TESTIMONIALS } from '../constants';
-import { SectionId } from '../types';
+import { SectionId, Testimonial } from '../types';
 import { Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const ClientFeedback: React.FC = () => {
+interface ClientFeedbackProps {
+  data?: Testimonial[];
+}
+
+const ClientFeedback: React.FC<ClientFeedbackProps> = ({ data = TESTIMONIALS }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -11,7 +15,7 @@ const ClientFeedback: React.FC = () => {
     if (scrollRef.current) {
       const { current } = scrollRef;
       const scrollAmount = current.clientWidth; // Scroll one view width
-      
+
       if (direction === 'left') {
         current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
       } else {
@@ -24,9 +28,9 @@ const ClientFeedback: React.FC = () => {
     if (scrollRef.current) {
       const { scrollLeft, children } = scrollRef.current;
       if (children.length > 0) {
-          const itemWidth = children[0].clientWidth;
-          const newIndex = Math.round(scrollLeft / itemWidth);
-          setActiveIndex(newIndex);
+        const itemWidth = children[0].clientWidth;
+        const newIndex = Math.round(scrollLeft / itemWidth);
+        setActiveIndex(newIndex);
       }
     }
   };
@@ -44,15 +48,15 @@ const ClientFeedback: React.FC = () => {
 
         <div className="relative group">
           {/* Navigation Buttons */}
-          <button 
+          <button
             onClick={() => scroll('left')}
             className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-6 z-20 w-10 h-10 bg-white rounded-full shadow-lg border border-slate-100 flex items-center justify-center text-navy-900 hover:text-gold-500 hover:scale-110 transition-all disabled:opacity-50"
             aria-label="Anterior"
           >
             <ChevronLeft size={24} />
           </button>
-          
-          <button 
+
+          <button
             onClick={() => scroll('right')}
             className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 z-20 w-10 h-10 bg-white rounded-full shadow-lg border border-slate-100 flex items-center justify-center text-navy-900 hover:text-gold-500 hover:scale-110 transition-all"
             aria-label="Próximo"
@@ -61,15 +65,15 @@ const ClientFeedback: React.FC = () => {
           </button>
 
           {/* Carousel Container */}
-          <div 
+          <div
             ref={scrollRef}
             onScroll={handleScroll}
             className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-12 pt-4 px-2 no-scrollbar scroll-smooth [&::-webkit-scrollbar]:hidden"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {TESTIMONIALS.map((testimonial, index) => (
-               <div 
-                key={testimonial.id} 
+            {data.map((testimonial, index) => (
+              <div
+                key={testimonial.id}
                 className="snap-center flex-shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
               >
                 <div className="bg-slate-50 p-8 rounded-lg border border-slate-100 relative group-hover:shadow-xl hover:shadow-navy-900/5 transition-all duration-300 h-full flex flex-col">
@@ -85,13 +89,13 @@ const ClientFeedback: React.FC = () => {
                     </div>
                   </div>
                 </div>
-               </div>
+              </div>
             ))}
           </div>
 
           {/* Pagination Dots */}
           <div className="flex justify-center gap-2 mt-2">
-            {TESTIMONIALS.map((_, index) => (
+            {data.map((_, index) => (
               <button
                 key={index}
                 onClick={() => {
@@ -100,11 +104,10 @@ const ClientFeedback: React.FC = () => {
                     scrollRef.current.scrollTo({ left: itemWidth * index, behavior: 'smooth' });
                   }
                 }}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  activeIndex === index
-                    ? 'w-6 bg-gold-500' 
+                className={`h-2 rounded-full transition-all duration-300 ${activeIndex === index
+                    ? 'w-6 bg-gold-500'
                     : 'w-2 bg-slate-200 hover:bg-gold-300'
-                }`}
+                  }`}
                 aria-label={`Ir para slide ${index + 1}`}
               />
             ))}

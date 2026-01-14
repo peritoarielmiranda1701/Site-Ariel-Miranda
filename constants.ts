@@ -23,7 +23,8 @@ export const SERVICES: Service[] = [
       'Análise de Consumo e Fraudes',
       'Investigação de Acidentes Elétricos',
       'Vistoria de Instalações (NR-10)'
-    ]
+    ],
+    details: 'Nossos laudos técnicos são elaborados com rigor científico e fundamentação normativa, essenciais para identificar causas raízes de falhas elétricas, incêndios e irregularidades. Atendemos concessionárias, indústrias e condomínios, oferecendo suporte técnico completo em processos judiciais e pleitos administrativos.'
   },
   {
     id: '2',
@@ -35,7 +36,8 @@ export const SERVICES: Service[] = [
       'Laudos de Periculosidade (NR-16)',
       'Elaboração de LTCAT e PPP',
       'Assistência Técnica em Perícias'
-    ]
+    ],
+    details: 'Realizamos avaliações ambientais quantitativas e qualitativas para caracterização ou descaracterização de insalubridade e periculosidade. Nosso trabalho visa garantir a correta aplicação das Normas Regulamentadoras (NRs), protegendo a saúde do trabalhador e oferecendo segurança jurídica para as empresas.'
   },
   {
     id: '3',
@@ -47,7 +49,8 @@ export const SERVICES: Service[] = [
       'Autenticidade de Documentos Digitais',
       'Análise de Metadados',
       'Perícia em WhatsApp e E-mails'
-    ]
+    ],
+    details: 'Utilizamos softwares e metodologias forenses avançadas para extração e análise de dados digitais. Validamos a autenticidade de conversas de WhatsApp, e-mails, áudios e vídeos, garantindo a integridade da prova digital para uso em processos cíveis, trabalhistas e criminais.'
   },
   {
     id: '4',
@@ -59,7 +62,8 @@ export const SERVICES: Service[] = [
       'Cálculos de Rescisão',
       'Atualização Monetária',
       'Pareceres Contábeis'
-    ]
+    ],
+    details: 'Elaboramos cálculos judiciais e extrajudiciais com precisão matemática e observância estrita aos comandos da sentença. Atuamos na fase de liquidação, impugnação e conferência de cálculos, fornecendo pareceres técnicos contábeis que fundamentam a defesa dos interesses de nossos clientes.'
   }
 ];
 

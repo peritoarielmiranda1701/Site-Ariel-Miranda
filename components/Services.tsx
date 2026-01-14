@@ -1,14 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SERVICES } from '../constants';
-import { SectionId } from '../types';
+import { Service, SectionId } from '../types';
 import { Check } from 'lucide-react';
+import ServiceModal from './ServiceModal';
 
-const Services: React.FC = () => {
+interface ServicesProps {
+  data?: Service[];
+}
+
+const Services: React.FC<ServicesProps> = ({ data = SERVICES }) => {
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
+
+  const handleOpenModal = (service: Service) => {
+    setSelectedService(service);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedService(null);
+  };
+
   return (
     <section id={SectionId.SERVICES} className="py-28 bg-slate-50 relative overflow-hidden">
       {/* Background Decor */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
-      
+
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 reveal gap-6">
           <div className="max-w-2xl">
@@ -19,26 +34,27 @@ const Services: React.FC = () => {
           </div>
           <div className="md:max-w-xs">
             <p className="text-slate-500 text-sm leading-relaxed border-l-2 border-gold-500 pl-4">
-               Soluções completas em Engenharia Elétrica, Segurança do Trabalho e Forense Digital.
+              Soluções completas em Engenharia Elétrica, Segurança do Trabalho e Forense Digital.
             </p>
           </div>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {SERVICES.map((service, index) => (
-            <div 
-              key={service.id} 
-              className={`reveal reveal-delay-${(index + 1) * 100} group relative bg-white p-8 rounded-sm hover:shadow-2xl hover:shadow-navy-900/5 transition-all duration-500 border border-slate-100 hover:border-gold-200 hover:-translate-y-1 flex flex-col h-full`}
+          {data.map((service, index) => (
+            <div
+              key={service.id}
+              className={`reveal reveal-delay-${(index + 1) * 100} group relative bg-white p-8 rounded-sm hover:shadow-2xl hover:shadow-navy-900/5 transition-all duration-500 border border-slate-100 hover:border-gold-200 hover:-translate-y-1 flex flex-col h-full cursor-pointer`}
+              onClick={() => handleOpenModal(service)}
             >
               <div className="mb-6">
-                 <service.icon size={36} className="text-gold-500 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
+                <service.icon size={36} className="text-gold-500 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
               </div>
-              
+
               <h4 className="text-xl font-bold text-navy-900 mb-2 font-heading group-hover:text-gold-600 transition-colors">
                 {service.title}
               </h4>
-              
-              <p className="text-slate-600 text-sm leading-relaxed mb-6 opacity-80">
+
+              <p className="text-slate-600 text-sm leading-relaxed mb-6 opacity-80 line-clamp-3">
                 {service.description}
               </p>
 
@@ -53,17 +69,29 @@ const Services: React.FC = () => {
                   </div>
                 ))}
               </div>
-              
+
               <div className="pt-6 border-t border-slate-50">
-                <a href="#contact" className="inline-flex items-center gap-2 text-[10px] font-bold text-navy-900 uppercase tracking-widest group-hover:text-gold-600 transition-colors">
-                  Solicitar Avaliação
+                <button
+                  className="inline-flex items-center gap-2 text-[10px] font-bold text-navy-900 uppercase tracking-widest group-hover:text-gold-600 transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent double trigger if parent is also clickable
+                    handleOpenModal(service);
+                  }}
+                >
+                  Saiba Mais
                   <span className="transform group-hover:translate-x-1 transition-transform">&rarr;</span>
-                </a>
+                </button>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      <ServiceModal
+        isOpen={!!selectedService}
+        service={selectedService}
+        onClose={handleCloseModal}
+      />
     </section>
   );
 };

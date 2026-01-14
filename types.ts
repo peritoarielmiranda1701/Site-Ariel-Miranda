@@ -6,6 +6,7 @@ export interface Service {
   description: string;
   icon: LucideIcon;
   features: string[];
+  details?: string;
 }
 
 export interface Differential {

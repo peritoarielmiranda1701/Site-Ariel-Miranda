@@ -1,8 +1,12 @@
 import React from 'react';
-import { SectionId } from '../types';
+import { SectionId, ProcessStep } from '../types';
 import { PROCESS_STEPS } from '../constants';
 
-const Process: React.FC = () => {
+interface ProcessProps {
+  data?: ProcessStep[];
+}
+
+const Process: React.FC<ProcessProps> = ({ data = PROCESS_STEPS }) => {
   return (
     <section id={SectionId.PROCESS} className="py-28 bg-white relative overflow-hidden">
       {/* Background Decor */}
@@ -20,17 +24,17 @@ const Process: React.FC = () => {
           <div className="hidden lg:block absolute top-12 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold-200 to-transparent -z-10"></div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
-            {PROCESS_STEPS.map((step, index) => (
+            {data.map((step, index) => (
               <div key={step.id} className={`reveal reveal-delay-${(index + 1) * 100} relative group`}>
                 <div className="w-24 h-24 mx-auto bg-white rounded-full flex items-center justify-center border-4 border-slate-50 mb-8 relative z-10 shadow-lg group-hover:border-gold-300 group-hover:shadow-gold-500/20 transition-all duration-500">
                   <div className="w-20 h-20 bg-navy-50 rounded-full flex items-center justify-center text-navy-900 group-hover:bg-gold-500 group-hover:text-white transition-all duration-500 transform group-hover:rotate-12">
-                     <step.icon size={32} />
+                    <step.icon size={32} />
                   </div>
                   <div className="absolute -top-2 -right-2 w-8 h-8 bg-navy-900 rounded-full flex items-center justify-center text-white font-bold text-xs border-2 border-white shadow-md">
                     {step.number}
                   </div>
                 </div>
-                
+
                 <div className="text-center px-4">
                   <h4 className="text-xl font-bold text-navy-900 mb-3 font-heading group-hover:text-gold-600 transition-colors">{step.title}</h4>
                   <p className="text-slate-600 text-sm leading-relaxed">{step.description}</p>
