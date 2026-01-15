@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { directus } from '../lib/directus';
+import { directus, publicDirectus } from '../lib/directus';
 import { readItems, readSingleton } from '@directus/sdk';
 import * as Icons from 'lucide-react';
 import { Service, Testimonial, FAQItem, ProcessStep, Differential } from '../types';
@@ -59,15 +59,15 @@ export function useSiteData() {
         async function fetchData() {
             try {
                 const [servicesData, testimonialsData, faqsData, processData, infoData, heroData, differentialsData, aboutData, seoData] = await Promise.all([
-                    directus.request(readItems('services')),
-                    directus.request(readItems('testimonials')),
-                    directus.request(readItems('faqs')),
-                    directus.request(readItems('process_steps')),
-                    directus.request(readSingleton('Informacoes_Gerais')),
-                    directus.request(readSingleton('hero_stats')),
-                    directus.request(readItems('differentials')),
-                    directus.request(readSingleton('about_section' as any)),
-                    directus.request(readSingleton('seo_config' as any))
+                    publicDirectus.request(readItems('services')),
+                    publicDirectus.request(readItems('testimonials')),
+                    publicDirectus.request(readItems('faqs')),
+                    publicDirectus.request(readItems('process_steps')),
+                    publicDirectus.request(readSingleton('Informacoes_Gerais')),
+                    publicDirectus.request(readSingleton('hero_stats')),
+                    publicDirectus.request(readItems('differentials')),
+                    publicDirectus.request(readSingleton('about_section' as any)),
+                    publicDirectus.request(readSingleton('seo_config' as any))
                 ]);
 
                 if (servicesData) {

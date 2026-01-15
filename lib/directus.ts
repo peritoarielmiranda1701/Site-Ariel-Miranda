@@ -70,7 +70,14 @@ interface Schema {
     hero_stats: DirectusHeroStats; // Singleton
 }
 
-export const directus = createDirectus<Schema>('https://admin.peritoarielmiranda.com.br').with(authentication('json')).with(rest());
+// Client for Authenticated Admin Actions
+export const directus = createDirectus<Schema>('https://admin.peritoarielmiranda.com.br')
+    .with(authentication('json'))
+    .with(rest());
+
+// Client for Public Site Data (No Auth headers to avoid 401s from expired tokens)
+export const publicDirectus = createDirectus<Schema>('https://admin.peritoarielmiranda.com.br')
+    .with(rest());
 
 export const getAssetUrl = (id: string) => {
     if (!id) return '';
