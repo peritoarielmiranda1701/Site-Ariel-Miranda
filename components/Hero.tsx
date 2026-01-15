@@ -32,9 +32,15 @@ const Hero: React.FC<HeroProps> = ({ data }) => {
       // For each line, parse *bold* segments
       const parts = line.split(/(\*[^*]+\*)/g); // split by *text*
 
+      // Styling logic: First line is standard (large), subsequent lines are smaller
+      const lineClass = isTitle
+        ? ""
+        : lineIndex === 0
+          ? "block text-lg md:text-xl leading-relaxed text-slate-300"
+          : "block text-sm md:text-base mt-3 font-normal text-slate-400 opacity-90";
+
       return (
-        <React.Fragment key={lineIndex}>
-          {lineIndex > 0 && <br />}
+        <span key={lineIndex} className={lineClass}>
           {parts.map((part, partIndex) => {
             if (part.startsWith('*') && part.endsWith('*')) {
               const content = part.slice(1, -1);
@@ -54,7 +60,7 @@ const Hero: React.FC<HeroProps> = ({ data }) => {
             }
             return part;
           })}
-        </React.Fragment>
+        </span>
       );
     });
   };
@@ -86,7 +92,7 @@ const Hero: React.FC<HeroProps> = ({ data }) => {
           <div className="flex-1 space-y-10 max-w-4xl">
             {/* Badge */}
             <div className="reveal flex items-start">
-              <div className="inline-flex items-center gap-3 px-5 py-2 bg-white/5 border border-gold-500/30 rounded-full text-gold-300 font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] backdrop-blur-md shadow-lg shadow-gold-900/10 hover:bg-white/10 transition-colors">
+              <div className="inline-flex items-center gap-3 px-5 py-2 bg-white/5 border border-gold-500/30 rounded-full text-[#F5EBC4] font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] backdrop-blur-md shadow-lg shadow-gold-900/10 hover:bg-white/10 transition-colors">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-gold-500"></span>

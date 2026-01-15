@@ -19,10 +19,16 @@ export default {
                     950: '#0B1120', // Matches --color-navy-950
                 },
                 gold: {
-                    200: '#FDE047',
-                    400: '#EAB308', // Matches --color-gold-400
-                    500: '#D4AF37', // Matches --color-gold-500
-                    600: '#CA8A04', // Matches --color-gold-600
+                    50: '#FBF7E6',
+                    100: '#F5EBC4',
+                    200: '#ECD68E',
+                    300: '#E6C66D',
+                    400: '#D4AF37', // Matches --color-gold-500 legacy map
+                    500: '#C5A028',
+                    600: '#9E7D1C',
+                    700: '#806415',
+                    800: '#5C480F',
+                    900: '#3D300A',
                 }
             },
             fontFamily: {
