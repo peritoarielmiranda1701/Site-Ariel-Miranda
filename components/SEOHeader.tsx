@@ -45,12 +45,31 @@ const SEOHeader = ({ title, description, keywords, ogImage, ogTitle }: SEOProps)
         // --- Open Graph (Facebook/WhatsApp) ---
         setOg('og:title', ogTitle || title || '');
         setOg('og:description', description || '');
+        setOg('og:type', 'website');
+        setOg('og:url', window.location.href);
+        setOg('og:site_name', 'Perito Ariel Miranda');
+
         if (ogImage) {
             // Ensure full URL if it's just an ID
             const imageUrl = ogImage.startsWith('http')
                 ? ogImage
                 : `https://admin.peritoarielmiranda.com.br/assets/${ogImage}`;
+
             setOg('og:image', imageUrl);
+            setOg('og:image:secure_url', imageUrl); // HTTPS preference
+            setOg('og:image:width', '1200'); // Standard preview size guide
+            setOg('og:image:height', '630');
+
+            // Twitter Card
+            setMeta('twitter:card', 'summary_large_image');
+            setMeta('twitter:title', ogTitle || title || '');
+            setMeta('twitter:description', description || '');
+            setMeta('twitter:image', imageUrl);
+        } else {
+            // Fallback for Twitter if no image
+            setMeta('twitter:card', 'summary');
+            setMeta('twitter:title', ogTitle || title || '');
+            setMeta('twitter:description', description || '');
         }
 
     }, [title, description, keywords, ogImage, ogTitle]);

@@ -44,7 +44,7 @@
   }
 
   .premium-input {
-    @apply w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none transition-all duration-200 focus:bg-white focus:border-gold-500/50 focus:ring-4 focus:ring-gold-500/10 placeholder:text-slate-400 text-sm font-medium;
+    @apply w-full px-4 py-3 bg-white border border-slate-300 rounded-xl outline-none transition-all duration-200 text-navy-900 shadow-sm placeholder:text-slate-400 text-sm font-medium focus:border-gold-500 focus:ring-4 focus:ring-gold-500/10 hover:border-gold-500/50;
   }
 }
 
