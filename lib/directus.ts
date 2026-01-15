@@ -71,3 +71,8 @@ interface Schema {
 }
 
 export const directus = createDirectus<Schema>('https://admin.peritoarielmiranda.com.br').with(authentication('json')).with(rest());
+
+export const getAssetUrl = (id: string) => {
+    if (!id) return '';
+    return `https://admin.peritoarielmiranda.com.br/assets/${id}`;
+};

@@ -30,17 +30,11 @@ function LandingPage() {
         customization // New
     } = useSiteData();
 
-    // Inject Custom Colors
+    // Inject Custom Colors & Favicon
     React.useEffect(() => {
+        // Colors
         if (customization.colors.primary) {
             document.documentElement.style.setProperty('--color-primary', customization.colors.primary);
-            // We might need to map this to Tailwind if we can't update config. 
-            // Since we can't easily find tailwind config, we will assume standard classes are used 
-            // but we can override specific sensitive elements or use style tags.
-
-            // Actually, let's try to override the specific gold/navy vars if they existed as CSS vars. 
-            // But they likely don't.
-            // A robust way without rebuilding is to inject a <style> tag.
             const style = document.createElement('style');
             style.innerHTML = `
                 .text-gold-500, .text-gold-400, .text-gold-600 { color: ${customization.colors.primary} !important; }
@@ -50,10 +44,26 @@ function LandingPage() {
                 
                 .bg-navy-950 { background-color: ${customization.colors.accent} !important; }
             `;
-            if (customization.colors.primary || customization.colors.accent) {
-                document.head.appendChild(style);
-                return () => { document.head.removeChild(style); };
-            }
+            document.head.appendChild(style);
+            // Cleanup function for style tag not strictly necessary for SPA root unless navigation away heavily
+            // but good practice:
+            // return () => { document.head.removeChild(style); }; 
+        }
+
+        // Favicon
+        if (customization.favicon) {
+            // Remove existing favicons to force update
+            const existingFavicons = document.querySelectorAll("link[rel*='icon']");
+            existingFavicons.forEach(el => el.remove());
+
+            const link = document.createElement('link');
+            // @ts-ignore
+            link.type = 'image/png';
+            // @ts-ignore
+            link.rel = 'icon';
+            // @ts-ignore
+            link.href = `https://admin.peritoarielmiranda.com.br/assets/${customization.favicon}`;
+            document.head.appendChild(link);
         }
     }, [customization]);
 

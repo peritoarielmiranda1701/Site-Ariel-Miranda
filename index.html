@@ -5,12 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Perito Ariel Miranda | Engenharia e Perícias</title>
     <meta name="description" content="Perito Judicial e Assistente Técnico. Engenharia Elétrica, Segurança do Trabalho, Forense Digital e Cálculos Trabalhistas. Atendimento Nacional 24h.">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
+              "primary": "#4f46e5",
+              "primary-hover": "#4338ca",
+              "primary-light": "#eef2ff",
+              "bg-page": "#F9FAFB",
+              "surface": "#FFFFFF",
+              "border-light": "#e2e8f0",
+              "border-medium": "#cbd5e1",
+              "text-main": "#0f172a",
+              "text-body": "#334155",
+              "text-muted": "#64748b",
               gold: {
                 50: '#FBF7E6',
                 100: '#F5EBC4',
@@ -30,8 +41,13 @@
               }
             },
             fontFamily: {
-              sans: ['Lato', 'sans-serif'],
+              "sans": ["Inter", "Lato", "sans-serif"],
               heading: ['Montserrat', 'sans-serif'],
+            },
+            boxShadow: {
+                "card": "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+                "card-hover": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+                "floating": "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
             },
             backgroundImage: {
               'hero-pattern': "linear-gradient(to right bottom, rgba(2, 6, 23, 0.95), rgba(15, 23, 42, 0.88)), url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')",

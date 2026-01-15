@@ -13,7 +13,8 @@ import {
   ServiceColumns, ServiceFields,
   TestimonialColumns, TestimonialFields,
   FAQColumns, FAQFields,
-  InfoFields, HeroFields, SeoFields, AboutFields
+  InfoFields, HeroFields, SeoFields, AboutFields,
+  ProcessoColumns, ProcessoFields
 } from './components/admin/AdminConfigs';
 
 function App() {
@@ -86,6 +87,25 @@ function App() {
                 title="Pergunta"
                 fields={FAQFields}
                 routePath="faqs"
+              />
+            } />
+
+            {/* Processos */}
+            <Route path="processo" element={
+              <CollectionLoader
+                collection="processos"
+                title="Processos"
+                singularName="Processo"
+                columns={ProcessoColumns}
+                routePath="processo"
+              />
+            } />
+            <Route path="processo/:id" element={
+              <ItemEditor
+                collection="processos"
+                title="Processo"
+                fields={ProcessoFields}
+                routePath="processo"
               />
             } />
 

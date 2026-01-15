@@ -7,9 +7,11 @@ interface ImageUploadProps {
     value?: string; // The file ID (UUID)
     onChange: (fileId: string | null) => void;
     label?: string;
+    uid: string; // Unique identifier for the input
+    variant?: 'default' | 'compact' | 'favicon';
 }
 
-const ImageUpload = ({ value, onChange, label }: ImageUploadProps) => {
+const ImageUpload = ({ value, onChange, label, uid, variant = 'default' }: ImageUploadProps) => {
     const [uploading, setUploading] = useState(false);
     const [dragging, setDragging] = useState(false);
 
@@ -52,25 +54,29 @@ const ImageUpload = ({ value, onChange, label }: ImageUploadProps) => {
         }
     };
 
+    // Size classes based on variant
+    const heightClass = variant === 'compact' ? 'h-32' : variant === 'favicon' ? 'h-24 w-24' : 'h-48';
+    const containerClasses = variant === 'favicon' ? 'flex-none' : 'w-full';
+
     return (
-        <div className="space-y-2">
+        <div className={`space-y-2 ${containerClasses}`}>
             {label && <label className="block text-sm font-medium text-slate-700">{label}</label>}
 
             {value ? (
-                <div className="relative w-full h-48 bg-slate-100 rounded-xl overflow-hidden border border-slate-200 group">
+                <div className={`relative ${variant === 'favicon' ? 'w-24 h-24' : 'w-full ' + heightClass} bg-slate-100 rounded-xl overflow-hidden border border-slate-200 group`}>
                     <img
                         src={previewUrl!}
                         alt="Preview"
-                        className="w-full h-full object-cover"
+                        className={`w-full h-full object-contain p-2 ${variant === 'favicon' ? 'object-contain' : 'object-cover'}`}
                     />
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
                         <button
                             type="button"
-                            onClick={() => document.getElementById(`upload-${label}`)?.click()}
+                            onClick={() => document.getElementById(`upload-${uid}`)?.click()}
                             className="p-2 bg-white rounded-full text-slate-900 hover:text-amber-600 transition-colors"
                             title="Trocar Imagem"
                         >
-                            <Upload className="w-5 h-5" />
+                            <Upload className="w-4 h-4" />
                         </button>
                         <button
                             type="button"
@@ -78,7 +84,7 @@ const ImageUpload = ({ value, onChange, label }: ImageUploadProps) => {
                             className="p-2 bg-white rounded-full text-red-500 hover:bg-red-50 transition-colors"
                             title="Remover Imagem"
                         >
-                            <X className="w-5 h-5" />
+                            <X className="w-4 h-4" />
                         </button>
                     </div>
                 </div>
@@ -87,28 +93,32 @@ const ImageUpload = ({ value, onChange, label }: ImageUploadProps) => {
                     onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
                     onDragLeave={() => setDragging(false)}
                     onDrop={onDrop}
-                    className={`border-2 border-dashed rounded-xl h-48 flex flex-col items-center justify-center gap-2 transition-all cursor-pointer ${dragging ? 'border-amber-500 bg-amber-50' : 'border-slate-300 hover:border-amber-400 hover:bg-slate-50'
+                    className={`border-2 border-dashed rounded-xl ${heightClass} flex flex-col items-center justify-center gap-2 transition-all cursor-pointer ${dragging ? 'border-amber-500 bg-amber-50' : 'border-slate-300 hover:border-amber-400 hover:bg-slate-50'
                         }`}
-                    onClick={() => document.getElementById(`upload-${label}`)?.click()}
+                    onClick={() => document.getElementById(`upload-${uid}`)?.click()}
                 >
                     {uploading ? (
-                        <Loader2 className="w-8 h-8 text-amber-500 animate-spin" />
+                        <Loader2 className="w-6 h-6 text-amber-500 animate-spin" />
                     ) : (
                         <>
-                            <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center">
-                                <ImageIcon className="w-6 h-6 text-slate-400" />
+                            <div className={`bg-slate-100 rounded-full flex items-center justify-center ${variant === 'favicon' ? 'w-8 h-8' : 'w-10 h-10'}`}>
+                                <ImageIcon className={`${variant === 'favicon' ? 'w-4 h-4' : 'w-5 h-5'} text-slate-400`} />
                             </div>
-                            <p className="text-sm text-slate-500 font-medium">
-                                Clique para enviar ou arraste aqui
-                            </p>
-                            <p className="text-xs text-slate-400">JPG, PNG, WEBP (Max 5MB)</p>
+                            {variant !== 'favicon' && (
+                                <>
+                                    <p className="text-sm text-slate-500 font-medium">
+                                        Clique ou arraste
+                                    </p>
+                                    <p className="text-[10px] text-slate-400">Max 5MB</p>
+                                </>
+                            )}
                         </>
                     )}
                 </div>
             )}
 
             <input
-                id={`upload-${label}`}
+                id={`upload-${uid}`}
                 type="file"
                 accept="image/*"
                 className="hidden"

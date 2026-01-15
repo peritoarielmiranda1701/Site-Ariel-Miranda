@@ -44,6 +44,7 @@ export function useSiteData() {
     });
     const [customization, setCustomization] = useState({
         logo: '',
+        favicon: '',
         colors: {
             primary: '',
             accent: ''
@@ -151,17 +152,22 @@ export function useSiteData() {
                         ogTitle: info.og_title
                     });
 
-                    // Site Customization (Colors & Logo)
-                    if (info.site_logo || info.primary_color || info.accent_color || info.contact_email) {
+                }
+
+                // Site Customization (Colors & Logo) - Independent of SEO source
+                if (infoData) {
+                    const info = infoData as any;
+                    // Fallback specific for SEO if seoData was missing (handled above inside logic if needed, but here we just do customization)
+
+                    if (info.site_logo || info.primary_color || info.accent_color || info.contact_email || info.site_favicon) {
                         setContactInfo(prev => ({
                             ...prev,
-                            // If user set a specific contact email for form, use it. Otherwise keep default (or fallback to info.email)
                             recipient_email: info.contact_email || info.email || prev.email,
-                            // Also update display email if it matches logic (optional, but keep separate for safety)
                         }));
 
                         setCustomization({
                             logo: info.site_logo,
+                            favicon: info.site_favicon,
                             colors: {
                                 primary: info.primary_color,
                                 accent: info.accent_color

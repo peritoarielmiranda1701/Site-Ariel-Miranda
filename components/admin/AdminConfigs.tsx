@@ -55,9 +55,10 @@ export const FAQFields: any[] = [
 
 // --- Info (Contacts & Social) ---
 export const InfoFields: any[] = [
-    { name: 'site_logo', label: 'Logo do Site', type: 'image', section: 'Identidade Visual' },
-    { name: 'primary_color', label: 'Cor Principal (Dourado)', type: 'text', section: 'Identidade Visual', helperText: 'Código Hex (ex: #D4AF37)' },
-    { name: 'accent_color', label: 'Cor de Destaque (Fundo)', type: 'text', section: 'Identidade Visual', helperText: 'Código Hex (ex: #020617)' },
+    { name: 'site_logo', label: 'Logo do Site (Header/Footer)', type: 'image', section: 'Identidade Visual' },
+    { name: 'site_favicon', label: 'Favicon (Aba do Navegador)', type: 'image', section: 'Identidade Visual', helperText: 'Recomendado: 32x32px ou 64x64px (PNG/ICO)' },
+    { name: 'primary_color', label: 'Cor Principal (Dourado)', type: 'color', section: 'Identidade Visual', helperText: 'Código Hex (ex: #D4AF37)' },
+    { name: 'accent_color', label: 'Cor de Destaque (Fundo)', type: 'color', section: 'Identidade Visual', helperText: 'Código Hex (ex: #020617)' },
 
     { name: 'contact_email', label: 'E-mail para Receber Contatos', type: 'text', section: 'Mensagens' },
 
@@ -104,4 +105,20 @@ export const SeoFields: any[] = [
     { name: 'site_keywords', label: 'Palavras-chave', type: 'text', section: 'Básico', helperText: 'Ex: perícia, engenharia, laudo, elétrica' },
     { name: 'og_image', label: 'Imagem de Compartilhamento (Social)', type: 'image', section: 'Redes Sociais', helperText: 'Imagem que aparece ao compartilhar o link no WhatsApp/Facebook.' },
     { name: 'og_title', label: 'Título Social', type: 'text', section: 'Redes Sociais', helperText: 'Opcional. Se vazio, usa o Título do Site.' },
+];
+
+// --- Processos (New) ---
+export const ProcessoColumns = [
+    { key: 'numero', label: 'Número do Processo' },
+    { key: 'cliente', label: 'Cliente / Interessado' },
+    { key: 'status', label: 'Status' }
+];
+
+export const ProcessoFields: any[] = [
+    { name: 'numero', label: 'Número do Processo', type: 'text', required: true, helperText: 'Ex: 0001234-56.2024.8.12.0001' },
+    { name: 'cliente', label: 'Nome do Cliente / Interessado', type: 'text', required: true },
+    { name: 'vara', label: 'Vara / Tribunal', type: 'text', section: 'Detalhes' },
+    { name: 'status', label: 'Status Atual', type: 'text', required: true, helperText: 'Ex: Em Andamento, Aguardando Perícia' },
+    { name: 'descricao', label: 'Descrição / Resumo', type: 'textarea', section: 'Detalhes' },
+    { name: 'data_entrada', label: 'Data de Entrada', type: 'text', inputType: 'date', section: 'Detalhes' }
 ];
