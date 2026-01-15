@@ -9,12 +9,14 @@ import { AuthProvider } from './context/AuthContext';
 import CollectionLoader from './components/admin/CollectionLoader';
 import ItemEditor from './components/admin/ItemEditor';
 import SingletonEditor from './components/admin/SingletonEditor';
+import { SetupMessages } from './components/admin/SetupMessages';
 import {
   ServiceColumns, ServiceFields,
   TestimonialColumns, TestimonialFields,
   FAQColumns, FAQFields,
+  MessageColumns, MessageFields,
   InfoFields, HeroFields, SeoFields, AboutFields,
-  ProcessoColumns, ProcessoFields
+  ProcessStepColumns, ProcessStepFields
 } from './components/admin/AdminConfigs';
 
 function App() {
@@ -90,21 +92,21 @@ function App() {
               />
             } />
 
-            {/* Processos */}
+            {/* Workflow (Process Steps) */}
             <Route path="processo" element={
               <CollectionLoader
-                collection="processos"
-                title="Processos"
-                singularName="Processo"
-                columns={ProcessoColumns}
+                collection="process_steps"
+                title="Fluxo de Trabalho"
+                singularName="Etapa"
+                columns={ProcessStepColumns}
                 routePath="processo"
               />
             } />
             <Route path="processo/:id" element={
               <ItemEditor
-                collection="processos"
-                title="Processo"
-                fields={ProcessoFields}
+                collection="process_steps"
+                title="Editar Etapa"
+                fields={ProcessStepFields}
                 routePath="processo"
               />
             } />
@@ -133,6 +135,25 @@ function App() {
               />
             } />
 
+            {/* Messages */}
+            <Route path="mensagens" element={
+              <CollectionLoader
+                collection="messages"
+                title="Mensagens recebidas"
+                singularName="Mensagem"
+                columns={MessageColumns}
+                routePath="mensagens"
+              />
+            } />
+            <Route path="mensagens/:id" element={
+              <ItemEditor
+                collection="messages"
+                title="Ver Mensagem"
+                fields={MessageFields}
+                routePath="mensagens"
+              />
+            } />
+
             <Route path="seo" element={
               <SingletonEditor
                 collection="seo_config"
@@ -140,6 +161,8 @@ function App() {
                 fields={SeoFields}
               />
             } />
+
+            <Route path="setup-messages" element={<SetupMessages />} />
 
           </Route>
 

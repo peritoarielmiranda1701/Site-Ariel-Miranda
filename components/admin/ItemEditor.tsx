@@ -118,23 +118,25 @@ const ItemEditor = ({ collection, title, fields, routePath }: ItemEditorProps) =
                 </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-floating border border-slate-100 overflow-hidden relative group">
+            <div className="bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-100 overflow-hidden relative group">
                 {/* Header */}
-                <div className="p-8 border-b border-gray-100 bg-white relative z-10">
-                    <div className="flex items-center gap-4">
-                        <div className={`p-3 rounded-xl ${isNew ? 'bg-green-50' : 'bg-blue-50'}`}>
-                            {isNew ? <Plus className={`w-6 h-6 ${isNew ? 'text-green-600' : 'text-blue-600'}`} /> : <Edit2 className={`w-6 h-6 ${isNew ? 'text-green-600' : 'text-blue-600'}`} />}
+                <div className="p-8 border-b border-slate-100 bg-white relative z-10 flex items-center justify-between">
+                    <div className="flex items-center gap-6">
+                        <div className={`p-4 rounded-2xl shadow-inner ${isNew ? 'bg-emerald-50 text-emerald-600' : 'bg-navy-50 text-navy-900'}`}>
+                            {isNew ? <Plus className="w-6 h-6" /> : <Edit2 className="w-6 h-6" />}
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold text-text-main tracking-tight">{title}</h1>
-                            <p className="text-sm text-text-muted font-medium mt-1">Preencha os campos abaixo para {isNew ? 'criar um novo registro' : 'atualizar este registro'}.</p>
+                            <h1 className="text-2xl font-bold text-navy-900 tracking-tight">{title}</h1>
+                            <p className="text-sm text-slate-500 font-medium mt-1">
+                                {isNew ? 'Preencha os dados abaixo para criar um novo registro.' : 'Edite as informações abaixo para atualizar este registro.'}
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-8 md:p-10">
+                <form onSubmit={handleSubmit} className="p-8 md:p-12 bg-slate-50/30">
                     {error && (
-                        <div className="bg-red-50 text-red-600 p-4 rounded-xl text-sm flex items-center gap-3 border border-red-100 shadow-sm mb-8">
+                        <div className="bg-red-50 text-red-600 p-4 rounded-xl text-sm flex items-center gap-3 border border-red-100 shadow-sm mb-8 animate-shake">
                             <div className="p-1.5 bg-red-100 rounded-full shrink-0">
                                 <AlertCircle className="w-4 h-4 text-red-600" />
                             </div>
@@ -142,13 +144,13 @@ const ItemEditor = ({ collection, title, fields, routePath }: ItemEditorProps) =
                         </div>
                     )}
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
                         {fields.map((field) => {
                             const isFullWidth = field.type === 'textarea' || field.type === 'list' || field.type === 'image';
                             return (
                                 <div key={field.name} className={`space-y-3 ${isFullWidth ? 'col-span-1 md:col-span-2' : 'col-span-1'} group/field`}>
                                     {field.type !== 'image' && (
-                                        <label className="text-text-muted text-[10px] font-bold uppercase tracking-widest block flex items-center gap-2 group-hover/field:text-primary transition-colors pl-1">
+                                        <label className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400 group-focus-within/field:text-gold-600 transition-colors pl-1 flex items-center gap-1">
                                             {field.label} {field.required && <span className="text-red-500">*</span>}
                                         </label>
                                     )}
@@ -157,28 +159,28 @@ const ItemEditor = ({ collection, title, fields, routePath }: ItemEditorProps) =
                                         <textarea
                                             value={formData[field.name] || ''}
                                             onChange={(e) => handleChange(field.name, e.target.value)}
-                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 text-text-body placeholder-gray-400 focus:outline-none focus:bg-white focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all resize-y leading-relaxed shadow-sm hover:border-slate-300 text-sm font-medium h-32"
+                                            className="premium-input min-h-[150px] resize-y"
                                             required={field.required}
                                             placeholder={field.helperText}
                                         />
                                     ) : field.type === 'list' ? (
-                                        <div className="space-y-4 p-5 bg-slate-50 rounded-2xl border border-slate-200 hover:border-slate-300 transition-colors">
+                                        <div className="space-y-4 p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-gold-500/30 transition-colors">
                                             {(formData[field.name] || []).map((item: string, idx: number) => (
-                                                <div key={idx} className="flex gap-3 items-center group/item">
-                                                    <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-xs font-bold text-text-muted shrink-0 shadow-sm">
+                                                <div key={idx} className="flex gap-3 items-center group/item animate-fade-in-up">
+                                                    <div className="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center text-xs font-bold text-slate-400 shrink-0">
                                                         {idx + 1}
                                                     </div>
                                                     <input
                                                         type="text"
                                                         value={item}
                                                         onChange={(e) => updateListItem(field.name, idx, e.target.value)}
-                                                        className="flex-1 px-4 py-3 rounded-xl border border-slate-200 bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary/50 outline-none shadow-sm transition-all text-sm font-medium text-text-main"
+                                                        className="premium-input shadow-none"
                                                         placeholder="Digite o item..."
                                                     />
                                                     <button
                                                         type="button"
                                                         onClick={() => removeListItem(field.name, idx)}
-                                                        className="p-2.5 text-text-muted hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors border border-transparent hover:border-red-100"
+                                                        className="p-3 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
                                                     >
                                                         <X className="w-4 h-4" />
                                                     </button>
@@ -187,18 +189,18 @@ const ItemEditor = ({ collection, title, fields, routePath }: ItemEditorProps) =
                                             <button
                                                 type="button"
                                                 onClick={() => addListItem(field.name)}
-                                                className="flex items-center gap-2 text-xs font-bold text-primary hover:text-primary-hover uppercase tracking-wider mt-2 px-4 py-3 rounded-xl hover:bg-white hover:shadow-sm border border-transparent hover:border-primary/20 transition-all w-full justify-center border-dashed border-2 border-primary/20 bg-primary/5"
+                                                className="flex items-center gap-2 text-xs font-bold text-navy-900 hover:text-gold-600 uppercase tracking-wider mt-4 px-6 py-4 rounded-xl hover:bg-white hover:shadow-md border border-dashed border-slate-300 hover:border-gold-500/50 transition-all w-full justify-center bg-slate-50"
                                             >
                                                 <Plus className="w-4 h-4" />
                                                 Adicionar Item
                                             </button>
                                         </div>
                                     ) : field.type === 'image' ? (
-                                        <div className="space-y-3">
-                                            <label className="text-text-muted text-[10px] font-bold uppercase tracking-widest block flex items-center gap-2 group-hover/field:text-primary transition-colors pl-1">
+                                        <div className="space-y-4">
+                                            <label className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400 flex items-center gap-1 pl-1">
                                                 {field.label} {field.required && <span className="text-red-500">*</span>}
                                             </label>
-                                            <div className="bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 hover:border-primary/50 hover:bg-primary/5 transition-all p-1 group-hover/field:shadow-inner relative overflow-hidden group/image">
+                                            <div className="bg-white rounded-2xl border border-slate-200 p-2 shadow-sm hover:border-gold-500/50 transition-all group/image">
                                                 <ImageUpload
                                                     value={formData[field.name]}
                                                     onChange={(val) => handleChange(field.name, val)}
@@ -211,15 +213,15 @@ const ItemEditor = ({ collection, title, fields, routePath }: ItemEditorProps) =
                                             type="text"
                                             value={formData[field.name] || ''}
                                             onChange={(e) => handleChange(field.name, e.target.value)}
-                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 text-text-main placeholder-gray-400 focus:outline-none focus:bg-white focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all font-medium shadow-sm hover:border-slate-300 text-sm"
+                                            className="premium-input"
                                             required={field.required}
                                             placeholder={field.helperText}
                                         />
                                     )}
                                     {/* Simple helper for icons */}
                                     {field.type === 'icon' && (
-                                        <p className="text-text-muted/80 text-[10px] leading-tight pl-1 font-medium flex items-center gap-1.5 bg-slate-50 w-fit px-2 py-1 rounded-lg border border-slate-100">
-                                            <HelpCircle className="w-3 h-3 text-primary" />
+                                        <p className="text-slate-400 text-[10px] pl-1 flex items-center gap-1.5 pt-1">
+                                            <HelpCircle className="w-3 h-3" />
                                             Use nomes do Lucide React (ex: scale, gavel)
                                         </p>
                                     )}
@@ -228,20 +230,20 @@ const ItemEditor = ({ collection, title, fields, routePath }: ItemEditorProps) =
                         })}
                     </div>
 
-                    <div className="pt-8 border-t border-slate-100 flex justify-end gap-4 mt-8 sticky bottom-0 bg-white/95 backdrop-blur-sm py-6 -mb-8 -mx-8 px-8 z-20 border-t-0 shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.1)]">
+                    <div className="flex items-center justify-end gap-4 mt-12 pt-8 border-t border-slate-200">
                         <button
                             type="button"
                             onClick={() => navigate(-1)}
-                            className="px-6 py-3.5 rounded-xl border border-slate-200 text-text-muted font-bold hover:bg-slate-50 hover:text-text-main transition-all text-xs uppercase tracking-wide"
+                            className="px-8 py-4 rounded-xl text-slate-500 font-bold hover:bg-slate-100 hover:text-navy-900 transition-all text-xs uppercase tracking-widest border border-transparent hover:border-slate-200"
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
                             disabled={saving}
-                            className="bg-primary hover:bg-primary-hover text-white font-bold py-3.5 px-8 rounded-xl transition-all shadow-lg shadow-primary/30 disabled:opacity-70 flex items-center gap-2.5 text-xs uppercase tracking-wide hover:-translate-y-0.5 hover:shadow-primary/40 active:translate-y-0 active:shadow-md"
+                            className="bg-navy-900 hover:bg-navy-800 text-white font-bold py-4 px-10 rounded-xl transition-all shadow-lg shadow-navy-900/20 disabled:opacity-70 flex items-center gap-3 text-xs uppercase tracking-widest hover:-translate-y-1 hover:shadow-xl hover:shadow-navy-900/30 active:translate-y-0 border border-navy-800"
                         >
-                            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                            {saving ? <Loader2 className="w-4 h-4 animate-spin text-gold-500" /> : <Save className="w-4 h-4 text-gold-500" />}
                             {saving ? 'Salvando...' : 'Salvar Alterações'}
                         </button>
                     </div>

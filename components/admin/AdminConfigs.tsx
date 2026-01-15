@@ -38,7 +38,16 @@ export const TestimonialFields: any[] = [
 
 // --- FAQs ---
 export const FAQColumns = [
-    { key: 'question', label: 'Pergunta' }
+    { key: 'question', label: 'Pergunta' },
+    {
+        key: 'answer',
+        label: 'Resposta',
+        render: (val: string) => (
+            <span className="text-slate-500 text-xs font-normal line-clamp-2 leading-relaxed" title={val}>
+                {val}
+            </span>
+        )
+    }
 ];
 
 export const FAQFields: any[] = [
@@ -107,18 +116,54 @@ export const SeoFields: any[] = [
     { name: 'og_title', label: 'Título Social', type: 'text', section: 'Redes Sociais', helperText: 'Opcional. Se vazio, usa o Título do Site.' },
 ];
 
-// --- Processos (New) ---
-export const ProcessoColumns = [
-    { key: 'numero', label: 'Número do Processo' },
-    { key: 'cliente', label: 'Cliente / Interessado' },
-    { key: 'status', label: 'Status' }
+// --- Workflow (Process Steps) ---
+export const ProcessStepColumns = [
+    { key: 'number', label: '# Passo' },
+    { key: 'title', label: 'Título da Etapa' },
+    {
+        key: 'icon',
+        label: 'Ícone',
+        render: (val: string) => {
+            // @ts-ignore
+            const Icon = LucideIcons[val] || HelpCircle;
+            return <Icon className="w-5 h-5 text-slate-400" />;
+        }
+    }
 ];
 
-export const ProcessoFields: any[] = [
-    { name: 'numero', label: 'Número do Processo', type: 'text', required: true, helperText: 'Ex: 0001234-56.2024.8.12.0001' },
-    { name: 'cliente', label: 'Nome do Cliente / Interessado', type: 'text', required: true },
-    { name: 'vara', label: 'Vara / Tribunal', type: 'text', section: 'Detalhes' },
-    { name: 'status', label: 'Status Atual', type: 'text', required: true, helperText: 'Ex: Em Andamento, Aguardando Perícia' },
-    { name: 'descricao', label: 'Descrição / Resumo', type: 'textarea', section: 'Detalhes' },
-    { name: 'data_entrada', label: 'Data de Entrada', type: 'text', inputType: 'date', section: 'Detalhes' }
+export const ProcessStepFields: any[] = [
+    { name: 'number', label: 'Número da Etapa', type: 'text', required: true, helperText: 'Ex: 01, 02...' },
+    { name: 'title', label: 'Título', type: 'text', required: true, helperText: 'Ex: Contato Inicial' },
+    { name: 'icon', label: 'Ícone (Lucide)', type: 'icon', required: true, helperText: 'Ex: phone, file-search' },
+    { name: 'description', label: 'Descrição da Etapa', type: 'textarea', required: true },
+];
+// --- Messages ---
+export const MessageColumns = [
+    { key: 'subject', label: 'Assunto' },
+    { key: 'name', label: 'Nome' },
+    {
+        key: 'status',
+        label: 'Status',
+        render: (val: string) => {
+            const styles: any = {
+                new: 'bg-gold-500/10 text-gold-600 border-gold-500/20',
+                read: 'bg-slate-100 text-slate-500 border-slate-200'
+            };
+            const labels: any = { new: 'Novo', read: 'Lido' };
+            return (
+                <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border ${styles[val] || styles.read}`}>
+                    {labels[val] || val}
+                </span>
+            );
+        }
+    }
+];
+
+export const MessageFields: any[] = [
+    { name: 'status', label: 'Status da Mensagem', type: 'select', options: [{ value: 'new', label: 'Novo' }, { value: 'read', label: 'Lido' }], required: true },
+    { name: 'name', label: 'Nome do Remetente', type: 'text', readOnly: true },
+    { name: 'email', label: 'E-mail', type: 'text', readOnly: true },
+    { name: 'phone', label: 'Telefone', type: 'text', readOnly: true },
+    { name: 'subject', label: 'Assunto', type: 'text', readOnly: true },
+    { name: 'message', label: 'Mensagem', type: 'textarea', readOnly: true },
 ];

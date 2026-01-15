@@ -5,29 +5,31 @@ import { getAssetUrl } from '../../lib/directus';
 import { Navigate, Outlet, NavLink } from 'react-router-dom';
 import {
     LayoutDashboard, Briefcase, MessageSquare,
-    HelpCircle, Settings, LogOut, FileText, Loader2, Search, UserCheck, Monitor, Tablet, Smartphone
+    HelpCircle, Settings, LogOut, FileText, Loader2, Search, UserCheck, Monitor, Crown
 } from 'lucide-react';
 
 const SidebarLink = ({ to, icon: Icon, label, end = false }: { to: string, icon: any, label: string, end?: boolean }) => (
-    <NavLink to={to} end={end} className={({ isActive }) => `group flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all border ${isActive ? 'bg-primary/5 border-primary/20 shadow-sm' : 'bg-transparent border-transparent hover:bg-gray-50 hover:border-border-light hover:shadow-sm'}`}>
+    <NavLink to={to} end={end} className={({ isActive }) => `group flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all border border-transparent ${isActive ? 'bg-gradient-to-r from-gold-500/20 to-transparent border-l-gold-500' : 'hover:bg-white/5 hover:text-white'}`}>
         {({ isActive }) => (
             <>
-                <div className={`p-1.5 rounded-md transition-colors ${isActive ? 'bg-primary text-white shadow-sm' : 'bg-white text-text-muted border border-gray-100 group-hover:text-primary group-hover:border-primary/20'}`}>
-                    <Icon className="w-4 h-4" />
+                <div className={`p-1.5 rounded-lg transition-all ${isActive ? 'text-gold-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'text-slate-400 group-hover:text-white'}`}>
+                    <Icon className="w-5 h-5" />
                 </div>
                 <div className="flex-1">
-                    <p className={`text-sm font-medium transition-colors ${isActive ? 'text-primary font-bold' : 'text-text-body group-hover:text-text-main'}`}>{label}</p>
+                    <p className={`text-sm tracking-wide transition-colors ${isActive ? 'text-white font-bold' : 'text-slate-400 font-medium group-hover:text-white'}`}>{label}</p>
                 </div>
-                {isActive && <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.5)]"></div>}
+                {isActive && <div className="w-1.5 h-1.5 rounded-full bg-gold-400 shadow-[0_0_8px_rgba(234,179,8,0.8)]"></div>}
             </>
         )}
     </NavLink>
 );
 
 const SidebarSection = ({ title, children }: { title: string, children: React.ReactNode }) => (
-    <div className="flex flex-col gap-1 mb-6">
-        <h3 className="px-3 text-[10px] font-bold uppercase tracking-widest text-text-muted/70 mb-2">{title}</h3>
-        {children}
+    <div className="flex flex-col gap-1 mb-8">
+        <h3 className="px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-3 ml-1 border-l-2 border-slate-700 pl-2">{title}</h3>
+        <div className="space-y-0.5">
+            {children}
+        </div>
     </div>
 );
 
@@ -39,15 +41,16 @@ const AdminLayout = () => {
     useEffect(() => {
         if (customization.colors.primary) {
             document.documentElement.style.setProperty('--color-primary', customization.colors.primary);
-            // Optional: calculate hover/light variants if needed, but Tailwind might rely on HSL/RGB if using recent configs.
-            // Assuming the simple hex override works for text-primary/bg-primary if they are mapped to the var.
         }
     }, [customization.colors.primary]);
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-slate-50">
-                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            <div className="min-h-screen flex items-center justify-center bg-navy-950">
+                <div className="relative">
+                    <div className="absolute inset-0 bg-gold-500/20 blur-xl rounded-full animate-pulse"></div>
+                    <Loader2 className="w-10 h-10 animate-spin text-gold-500 relative z-10" />
+                </div>
             </div>
         );
     }
@@ -57,107 +60,108 @@ const AdminLayout = () => {
     }
 
     return (
-        <div className="bg-slate-50/50 text-text-body font-sans overflow-hidden h-screen flex flex-col antialiased selection:bg-primary/20 selection:text-primary">
-            {/* Header - Glassmorphic */}
-            <header className="flex items-center justify-between whitespace-nowrap border-b border-gray-200/60 bg-white/80 backdrop-blur-md px-8 py-3 shrink-0 z-40 relative h-16 transition-all duration-300">
-                <div className="flex items-center gap-6 w-64 border-r border-gray-100 h-full mr-6">
+        <div className="bg-slate-50 text-slate-800 font-sans overflow-hidden h-screen flex antialiased selection:bg-gold-500/30 selection:text-gold-600">
+
+            {/* Sidebar "The Sovereign Command" */}
+            <aside className="w-72 bg-navy-950 flex flex-col shrink-0 z-50 shadow-2xl relative overflow-hidden">
+                {/* Decorative Elements */}
+                <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-navy-900 via-transparent to-transparent opacity-50 pointer-events-none"></div>
+                <div className="absolute top-[-10%] right-[-50%] w-[300px] h-[300px] bg-gold-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+                {/* Brand */}
+                <div className="p-8 pb-6 relative z-10 flex items-center gap-4">
                     {customization.logo ? (
-                        <div className="flex items-center gap-3">
+                        <div className="p-2 bg-white/5 rounded-xl border border-white/10 backdrop-blur-sm">
                             <img
                                 src={getAssetUrl(customization.logo)}
                                 alt="Brand Logo"
-                                className="h-9 w-auto object-contain max-w-[160px] drop-shadow-sm"
+                                className="h-8 w-auto object-contain brightness-0 invert opacity-90"
                             />
                         </div>
                     ) : (
-                        <div className="flex items-center gap-3 group cursor-default">
-                            <div className="size-9 flex items-center justify-center bg-gradient-to-br from-primary to-slate-800 text-white rounded-xl shadow-lg shadow-primary/25 group-hover:scale-105 transition-transform duration-300">
-                                <LayoutDashboard className="w-5 h-5" />
-                            </div>
-                            <div>
-                                <h2 className="text-text-main text-sm font-bold leading-tight tracking-tight group-hover:text-primary transition-colors">Painel Admin</h2>
-                                <p className="text-text-muted text-[10px] uppercase font-bold tracking-wide opacity-80">Gerenciamento</p>
-                            </div>
+                        <div className="size-10 flex items-center justify-center bg-gradient-to-br from-gold-500 to-gold-600 rounded-xl shadow-lg shadow-gold-500/20">
+                            <Crown className="w-5 h-5 text-navy-950" />
                         </div>
                     )}
-                </div>
-
-                <div className="flex justify-end gap-6 flex-1 items-center h-full">
-                    <a href="/" target="_blank" className="flex items-center justify-center gap-2 rounded-lg h-9 px-4 bg-white border border-gray-200 text-text-body text-xs font-bold uppercase tracking-wide hover:bg-gray-50 hover:text-primary hover:border-primary/30 transition-all shadow-sm hover:shadow-md group">
-                        Ver Site
-                        <Monitor className="w-4 h-4 text-text-muted group-hover:text-primary transition-colors" />
-                    </a>
-
-                    <div className="w-px bg-gray-200 h-8"></div>
-
-                    <div className="flex items-center gap-3 pl-2">
-                        <div className="text-right hidden sm:block">
-                            <p className="text-xs font-bold text-text-main">Administrador</p>
-                            <button onClick={logout} className="text-[10px] font-bold text-red-500 hover:text-red-600 uppercase tracking-wide flex items-center justify-end gap-1 transition-colors hover:underline">
-                                Sair <LogOut className="w-3 h-3" />
-                            </button>
-                        </div>
-                        <div className="bg-gradient-to-tr from-gray-100 to-white text-primary font-bold rounded-xl size-10 flex items-center justify-center border border-gray-100 shadow-md cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group relative overflow-hidden">
-                            {customization.favicon ? (
-                                <img src={getAssetUrl(customization.favicon)} className="w-6 h-6 object-contain relative z-10" alt="User" />
-                            ) : (
-                                <span className="group-hover:scale-110 transition-transform relative z-10">AM</span>
-                            )}
-                            <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors"></div>
-                        </div>
+                    <div>
+                        <h2 className="text-white text-sm font-bold leading-tight tracking-tight">Painel Admin</h2>
+                        <p className="text-gold-500/80 text-[10px] uppercase font-bold tracking-widest">Sovereign v2</p>
                     </div>
                 </div>
-            </header>
 
-            <div className="flex flex-1 overflow-hidden">
-                {/* Sidebar - Enhanced */}
-                <aside className="w-72 bg-white border-r border-gray-100 flex flex-col shrink-0 z-30 overflow-hidden shadow-[4px_0_24px_-12px_rgba(0,0,0,0.03)] pb-4">
-                    <nav className="flex-1 overflow-y-auto p-5 custom-scrollbar space-y-2">
-                        <SidebarSection title="Principal">
-                            <SidebarLink to="/painel/dashboard" icon={LayoutDashboard} label="Visão Geral" />
-                        </SidebarSection>
+                {/* Nav */}
+                <nav className="flex-1 overflow-y-auto px-4 py-4 custom-scrollbar space-y-2 relative z-10">
+                    <SidebarSection title="Principal">
+                        <SidebarLink to="/painel/dashboard" icon={LayoutDashboard} label="Visão Geral" />
+                    </SidebarSection>
 
-                        <SidebarSection title="Conteúdo do Site">
-                            <SidebarLink to="/painel/hero" icon={FileText} label="Topo & Stats" />
-                            <SidebarLink to="/painel/sobre" icon={UserCheck} label="Sobre / Quem Sou" />
-                            <SidebarLink to="/painel/servicos" icon={Briefcase} label="Serviços" />
-                            <SidebarLink to="/painel/processo" icon={FileText} label="Processos" />
-                            <SidebarLink to="/painel/depoimentos" icon={MessageSquare} label="Depoimentos" />
-                            <SidebarLink to="/painel/faqs" icon={HelpCircle} label="Perguntas Frequentes" />
-                        </SidebarSection>
+                    <SidebarSection title="Gestão de Conteúdo">
+                        <SidebarLink to="/painel/hero" icon={FileText} label="Topo & Stats" />
+                        <SidebarLink to="/painel/sobre" icon={UserCheck} label="Sobre / Quem Sou" />
+                        <SidebarLink to="/painel/servicos" icon={Briefcase} label="Serviços Oferecidos" />
+                        <SidebarLink to="/painel/processo" icon={FileText} label="Fluxo de Trabalho" />
+                        <SidebarLink to="/painel/depoimentos" icon={MessageSquare} label="Depoimentos" />
+                        <SidebarLink to="/painel/faqs" icon={HelpCircle} label="Perguntas Frequentes" />
+                    </SidebarSection>
 
-                        <SidebarSection title="Configurações">
-                            <SidebarLink to="/painel/info" icon={Settings} label="Informações Gerais" />
-                            <SidebarLink to="/painel/seo" icon={Search} label="SEO & Metadados" />
-                        </SidebarSection>
-                    </nav>
+                    <SidebarSection title="Configurações">
+                        <SidebarLink to="/painel/info" icon={Settings} label="Informações Gerais" />
+                        <SidebarLink to="/painel/seo" icon={Search} label="SEO & Metadados" />
+                    </SidebarSection>
+                </nav>
 
-                    <div className="px-6 py-4 border-t border-gray-50 flex flex-col gap-1 opacity-60 hover:opacity-100 transition-opacity">
-                        <p className="text-[10px] text-center text-text-muted font-medium">
-                            &copy; 2024 Painel Gerencial v2.0
-                        </p>
+                {/* Footer */}
+                <div className="p-6 border-t border-white/5 bg-navy-900/50 backdrop-blur-sm relative z-10">
+                    <button onClick={logout} className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-white/5 hover:bg-red-500/10 border border-white/5 hover:border-red-500/30 transition-all group">
+                        <span className="text-xs font-bold uppercase tracking-widest text-slate-400 group-hover:text-red-400 transition-colors">Encerrar Sessão</span>
+                        <LogOut className="w-3 h-3 text-slate-500 group-hover:text-red-400" />
+                    </button>
+                    <p className="text-[10px] text-center text-slate-600 mt-4 font-medium tracking-wide">
+                        &copy; 2024 Perito Ariel Miranda
+                    </p>
+                </div>
+            </aside>
+
+            {/* Main Content Area */}
+            <main className="flex-1 flex flex-col relative overflow-hidden bg-slate-50">
+                {/* Glass Header */}
+                <header className="glass-header h-20 px-8 flex items-center justify-between z-40 sticky top-0">
+                    <div className="flex items-center gap-4">
+                        <h2 className="text-xl font-bold text-navy-900 tracking-tight">
+                            Olá, <span className="text-gold-600">Administrador</span>
+                        </h2>
                     </div>
-                </aside>
 
-                {/* Main Content - Premium Background */}
-                <main className="flex-1 flex flex-col bg-slate-50/70 overflow-hidden relative">
-                    {/* Subtle Gradient & Texture */}
-                    <div className="absolute inset-0 z-0 opacity-40 pointer-events-none mix-blend-multiply" style={{
-                        backgroundImage: `
-                            radial-gradient(circle at 100% 0%, rgba(var(--color-primary-rgb), 0.03) 0%, transparent 25%),
-                            radial-gradient(circle at 0% 100%, rgba(var(--color-primary-rgb), 0.03) 0%, transparent 25%)
-                        `
-                    }}></div>
-                    <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #cbd5e1 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
+                    <div className="flex justify-end gap-6 items-center">
+                        <a href="/" target="_blank" className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-bold uppercase tracking-wide hover:border-gold-500/50 hover:text-gold-600 hover:shadow-md transition-all group">
+                            Visualizar Site
+                            <Monitor className="w-3.5 h-3.5 text-slate-400 group-hover:text-gold-500 transition-colors" />
+                        </a>
 
-                    {/* Content Scroll Area */}
-                    <div className="flex-1 overflow-y-auto z-10 scroll-smooth relative custom-scrollbar">
-                        <div className="min-h-full w-full max-w-[1920px] mx-auto p-8 md:p-12 transition-all duration-300 ease-out">
-                            <Outlet />
+                        <div className="w-px bg-slate-200 h-8"></div>
+
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-gold-100 to-white border border-gold-200 p-0.5 shadow-sm">
+                                {customization.favicon ? (
+                                    <img src={getAssetUrl(customization.favicon)} className="w-full h-full object-contain rounded-full" alt="User" />
+                                ) : (
+                                    <div className="w-full h-full rounded-full bg-gold-500 flex items-center justify-center text-white font-bold text-xs">AM</div>
+                                )}
+                            </div>
                         </div>
                     </div>
-                </main>
-            </div>
+                </header>
+
+                {/* Scrollable Content */}
+                <div className="flex-1 overflow-y-auto px-8 py-8 custom-scrollbar relative">
+                    {/* Background Texture */}
+                    <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#0B1120 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
+
+                    <div className="max-w-[1600px] mx-auto relative z-10 pb-20">
+                        <Outlet />
+                    </div>
+                </div>
+            </main>
         </div>
     );
 };

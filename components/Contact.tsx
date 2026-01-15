@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Mail, MapPin, Phone, ArrowUpRight, Send, User, Instagram, Linkedin, MessageCircle } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
 import { SectionId } from '../types';
+import { directus } from '../lib/directus';
+import { createItem } from '@directus/sdk';
 
 interface ContactProps {
   data?: typeof CONTACT_INFO;
@@ -22,6 +24,8 @@ const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo }) => {
 
 
 
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormState({
       ...formState,
@@ -29,18 +33,32 @@ const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo }) => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setStatus('submitting');
 
-    // Prepare email content
-    const subject = `Contato via Site - ${formState.name}`;
-    const body = `Nome: ${formState.name}\n` +
-      `Email: ${formState.email}\n` +
-      `Telefone: ${formState.phone}\n\n` +
-      `Mensagem:\n${formState.message}`;
+    try {
+      // 1. Save to Database (Directus)
+      // @ts-ignore
+      await directus.request(createItem('messages', {
+        name: formState.name,
+        email: formState.email,
+        phone: formState.phone,
+        message: formState.message,
+        subject: `Contato do Site: ${formState.name}`,
+        status: 'new'
+      }));
 
-    // Open default email client
-    window.location.href = `mailto:${data.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      setStatus('success');
+      setFormState({ name: '', email: '', phone: '', message: '' });
+
+      // Optional: Fallback to mailto if needed, but we want API first.
+      // We will rely on Directus Flows for email sending to owner.
+
+    } catch (error) {
+      console.error("Erro ao enviar mensagem:", error);
+      setStatus('error');
+    }
   };
 
   return (
@@ -52,8 +70,8 @@ const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo }) => {
           <div className="space-y-12">
             <div className="flex flex-col items-start">
               <img
-                src="https://cache2net3.com/Repositorio/19349/Logo/LOGO.png"
-                alt="Ariel Miranda"
+                src={logoUrl}
+                alt="Logo"
                 className="h-24 md:h-32 w-auto object-contain mb-2"
               />
               <p className="text-slate-400 text-sm leading-relaxed max-w-md font-light">
@@ -147,80 +165,105 @@ const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo }) => {
           </div>
 
           {/* Right Column: Contact Form */}
-          <div className="bg-white/5 p-8 md:p-10 rounded-lg border border-white/10 backdrop-blur-sm">
+          <div className="bg-white/5 p-8 md:p-10 rounded-lg border border-white/10 backdrop-blur-sm self-start">
             <h3 className="font-heading font-bold text-white text-xl mb-6">Envie uma Mensagem</h3>
-            <form onSubmit={handleSubmit} className="space-y-5">
 
-              {/* Name Field */}
-              <div>
-                <label htmlFor="name" className="block text-xs font-bold uppercase text-slate-400 mb-2">
-                  Seu Nome
-                </label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    placeholder="Digite seu nome completo"
-                    value={formState.name}
-                    onChange={handleChange}
-                    className="w-full bg-navy-900/50 border border-navy-800 rounded-md py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-all placeholder:text-slate-600"
-                  />
+            {status === 'success' ? (
+              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-6 text-center animate-fade-in">
+                <div className="w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-400">
+                  <Send className="w-6 h-6" />
                 </div>
+                <h4 className="text-white font-bold text-lg mb-2">Mensagem Enviada!</h4>
+                <p className="text-slate-300 text-sm mb-6">Recebemos seu contato e retornaremos em breve.</p>
+                <button
+                  onClick={() => setStatus('idle')}
+                  className="text-xs font-bold uppercase tracking-widest text-gold-500 hover:text-white transition-colors"
+                >
+                  Enviar nova mensagem
+                </button>
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Name Field */}
                 <div>
-                  <label htmlFor="phone" className="block text-xs font-bold uppercase text-slate-400 mb-2">Telefone</label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    required
-                    placeholder="(00) 00000-0000"
-                    value={formState.phone}
-                    onChange={handleChange}
-                    className="w-full bg-navy-900/50 border border-navy-800 rounded-md py-3 px-4 text-white text-sm focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-all placeholder:text-slate-600"
-                  />
+                  <label htmlFor="name" className="block text-xs font-bold uppercase text-slate-400 mb-2">
+                    Seu Nome
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      required
+                      placeholder="Digite seu nome completo"
+                      value={formState.name}
+                      onChange={handleChange}
+                      disabled={status === 'submitting'}
+                      className="w-full bg-navy-900/50 border border-navy-800 rounded-md py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-all placeholder:text-slate-600 disabled:opacity-50"
+                    />
+                  </div>
                 </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label htmlFor="phone" className="block text-xs font-bold uppercase text-slate-400 mb-2">Telefone</label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      required
+                      placeholder="(00) 00000-0000"
+                      value={formState.phone}
+                      onChange={handleChange}
+                      disabled={status === 'submitting'}
+                      className="w-full bg-navy-900/50 border border-navy-800 rounded-md py-3 px-4 text-white text-sm focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-all placeholder:text-slate-600 disabled:opacity-50"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="block text-xs font-bold uppercase text-slate-400 mb-2">E-mail</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      required
+                      placeholder="seu@email.com"
+                      value={formState.email}
+                      onChange={handleChange}
+                      disabled={status === 'submitting'}
+                      className="w-full bg-navy-900/50 border border-navy-800 rounded-md py-3 px-4 text-white text-sm focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-all placeholder:text-slate-600 disabled:opacity-50"
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label htmlFor="email" className="block text-xs font-bold uppercase text-slate-400 mb-2">E-mail</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
+                  <label htmlFor="message" className="block text-xs font-bold uppercase text-slate-400 mb-2">Mensagem</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={4}
                     required
-                    placeholder="seu@email.com"
-                    value={formState.email}
+                    placeholder="Como podemos ajudar?"
+                    value={formState.message}
                     onChange={handleChange}
-                    className="w-full bg-navy-900/50 border border-navy-800 rounded-md py-3 px-4 text-white text-sm focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-all placeholder:text-slate-600"
-                  />
+                    disabled={status === 'submitting'}
+                    className="w-full bg-navy-900/50 border border-navy-800 rounded-md py-3 px-4 text-white text-sm focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-all placeholder:text-slate-600 resize-none disabled:opacity-50"
+                  ></textarea>
                 </div>
-              </div>
 
-              <div>
-                <label htmlFor="message" className="block text-xs font-bold uppercase text-slate-400 mb-2">Mensagem</label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  required
-                  placeholder="Como podemos ajudar?"
-                  value={formState.message}
-                  onChange={handleChange}
-                  className="w-full bg-navy-900/50 border border-navy-800 rounded-md py-3 px-4 text-white text-sm focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-all placeholder:text-slate-600 resize-none"
-                ></textarea>
-              </div>
+                <button
+                  type="submit"
+                  disabled={status === 'submitting'}
+                  className="w-full bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-white font-bold uppercase tracking-widest py-4 rounded-md shadow-lg shadow-gold-900/20 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 text-xs disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {status === 'submitting' ? 'Enviando...' : 'Enviar Mensagem'} <Send size={16} />
+                </button>
 
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-white font-bold uppercase tracking-widest py-4 rounded-md shadow-lg shadow-gold-900/20 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 text-xs"
-              >
-                Enviar Mensagem <Send size={16} />
-              </button>
-            </form>
+                {status === 'error' && (
+                  <p className="text-red-400 text-xs text-center font-bold">Ocorreu um erro ao enviar. Tente novamente ou use o WhatsApp.</p>
+                )}
+              </form>
+            )}
           </div>
 
         </div>

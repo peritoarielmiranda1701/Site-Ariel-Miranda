@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-navy-950: #0B1120;
+    --color-navy-900: #0F172A;
+    --color-navy-800: #1E293B;
+    
+    --color-gold-400: #EAB308;
+    --color-gold-500: #D4AF37;
+    --color-gold-600: #CA8A04;
+
+    --font-inter: 'Inter', sans-serif;
+  }
+
+  body {
+    @apply text-slate-800 bg-slate-50;
+  }
+
+  /* Premium Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors;
+  }
+}
+
+@layer components {
+  .admin-sidebar-link-active {
+    @apply bg-white/10 text-white shadow-lg shadow-black/10 border-r-2 border-gold-500;
+  }
+
+  .admin-card {
+    @apply bg-white rounded-xl shadow-sm border border-slate-100/60 hover:shadow-md transition-all duration-300;
+  }
+
+  .premium-input {
+    @apply w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none transition-all duration-200 focus:bg-white focus:border-gold-500/50 focus:ring-4 focus:ring-gold-500/10 placeholder:text-slate-400 text-sm font-medium;
+  }
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-xl;
+}
+
+.glass-header {
+  @apply bg-white/70 backdrop-blur-lg border-b border-slate-200/50;
+}
