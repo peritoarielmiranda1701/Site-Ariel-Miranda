@@ -74,11 +74,16 @@ const Hero: React.FC<HeroProps> = ({ data }) => {
       id={SectionId.HOME}
       className="relative min-h-[95vh] flex items-center pt-24 pb-20 overflow-hidden"
     >
-      {/* Background with Static Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-navy-950"
-        style={{ backgroundImage: `url('${bgImage}')` }}
-      ></div>
+      {/* Background with Optimized Image */}
+      <img
+        src={bgImage}
+        alt="Engenharia e Perícias Técnicas"
+        className="absolute inset-0 w-full h-full object-cover object-center"
+        fetchPriority="high"
+        loading="eager"
+        width="1920"
+        height="1080"
+      />
 
       {/* Heavy Overlay for Legibility - Gradient Improved */}
       <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/90 to-navy-900/40 z-0"></div>

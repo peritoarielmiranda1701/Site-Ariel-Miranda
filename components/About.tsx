@@ -33,6 +33,9 @@ const About: React.FC<{ data?: any }> = ({ data }) => {
                   src={imageUrl}
                   alt={title}
                   className="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-110"
+                  loading="lazy"
+                  width="600"
+                  height="800"
                 />
               </div>
 
