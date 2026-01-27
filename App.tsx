@@ -16,7 +16,8 @@ import {
   FAQColumns, FAQFields,
   MessageColumns, MessageFields,
   InfoFields, HeroFields, SeoFields, AboutFields,
-  ProcessStepColumns, ProcessStepFields
+  ProcessStepColumns, ProcessStepFields,
+  DifferentialColumns, DifferentialFields
 } from './components/admin/AdminConfigs';
 
 function App() {
@@ -108,6 +109,25 @@ function App() {
                 title="Editar Etapa"
                 fields={ProcessStepFields}
                 routePath="processo"
+              />
+            } />
+
+            {/* Differentials */}
+            <Route path="diferenciais" element={
+              <CollectionLoader
+                collection="differentials"
+                title="Diferenciais"
+                singularName="Diferencial"
+                columns={DifferentialColumns}
+                routePath="diferenciais"
+              />
+            } />
+            <Route path="diferenciais/:id" element={
+              <ItemEditor
+                collection="differentials"
+                title="Diferencial"
+                fields={DifferentialFields}
+                routePath="diferenciais"
               />
             } />
 

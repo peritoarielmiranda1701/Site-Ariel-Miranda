@@ -137,6 +137,26 @@ export const ProcessStepFields: any[] = [
     { name: 'icon', label: 'Ícone (Lucide)', type: 'icon', required: true, helperText: 'Ex: phone, file-search' },
     { name: 'description', label: 'Descrição da Etapa', type: 'textarea', required: true },
 ];
+
+// --- Differentials ---
+export const DifferentialColumns = [
+    { key: 'title', label: 'Título' },
+    {
+        key: 'icon',
+        label: 'Ícone',
+        render: (val: string) => {
+            // @ts-ignore
+            const Icon = LucideIcons[val] || HelpCircle;
+            return <Icon className="w-5 h-5 text-slate-400" />;
+        }
+    }
+];
+
+export const DifferentialFields: any[] = [
+    { name: 'title', label: 'Título do Diferencial', type: 'text', required: true },
+    { name: 'icon', label: 'Nome do Ícone (Lucide)', type: 'icon', required: true, helperText: 'Ex: award, shield, zap' },
+    { name: 'description', label: 'Descrição', type: 'textarea', required: true },
+];
 // --- Messages ---
 export const MessageColumns = [
     { key: 'subject', label: 'Assunto' },
