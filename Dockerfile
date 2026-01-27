@@ -15,8 +15,8 @@ RUN npm ci --only=production=false
 # Copy source code
 COPY . .
 
-# Build the application
-RUN npm run build
+# Build the application with verbose logging
+RUN npm run build --verbose || (echo "Build failed. Checking for errors..." && cat /root/.npm/_logs/*.log 2>/dev/null && exit 1)
 
 # Production Stage
 FROM nginx:alpine
