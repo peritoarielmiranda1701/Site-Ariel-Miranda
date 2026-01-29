@@ -55,10 +55,10 @@ const About: React.FC<{ data?: any }> = ({ data }) => {
 
           <div className="w-full md:w-7/12">
             <div className="reveal reveal-delay-200">
-              <h4 className="text-gold-600 font-bold uppercase tracking-[0.2em] text-xs mb-4 flex items-center gap-3">
+              <span className="text-gold-600 font-bold uppercase tracking-[0.2em] text-xs mb-4 flex items-center gap-3">
                 <span className="w-8 h-[1px] bg-gold-600"></span>
                 Quem Sou
-              </h4>
+              </span>
               <h2 className="text-4xl md:text-5xl font-heading font-extrabold text-navy-900 mb-2 leading-tight">
                 {title}
               </h2>

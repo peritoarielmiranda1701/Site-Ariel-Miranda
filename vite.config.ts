@@ -22,6 +22,7 @@ export default defineConfig({
     },
     // Optimize chunk size
     chunkSizeWarningLimit: 1000,
+    sourcemap: true,
   },
   define: {
     // Garante que process.env funcione para o SDK do Gemini no Vite

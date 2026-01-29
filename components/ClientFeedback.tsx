@@ -104,12 +104,15 @@ const ClientFeedback: React.FC<ClientFeedbackProps> = ({ data = TESTIMONIALS }) 
                     scrollRef.current.scrollTo({ left: itemWidth * index, behavior: 'smooth' });
                   }
                 }}
-                className={`h-2 rounded-full transition-all duration-300 ${activeIndex === index
-                    ? 'w-6 bg-gold-500'
-                    : 'w-2 bg-slate-200 hover:bg-gold-300'
-                  }`}
+                className="p-2 group focus:outline-none" // Increased touch area with padding
                 aria-label={`Ir para slide ${index + 1}`}
-              />
+              >
+                <div className={`h-2 rounded-full transition-all duration-300 ${activeIndex === index
+                  ? 'w-6 bg-gold-500'
+                  : 'w-2 bg-slate-200 group-hover:bg-gold-300'
+                  }`}
+                />
+              </button>
             ))}
           </div>
         </div>

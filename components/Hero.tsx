@@ -5,7 +5,7 @@ import { getOptimizedImageUrl } from '../lib/directus';
 
 // Imagem fixa para o background (Substitua por sua URL se necessário)
 // Esta imagem remete a engenharia elétrica e industrial
-const HERO_IMAGE = "https://images.unsplash.com/photo-1621905251189-08b95d50c79f?auto=format&fit=crop&q=80&w=1920";
+const HERO_IMAGE = "https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&q=80&w=1920";
 
 interface HeroProps {
   data?: {

@@ -159,6 +159,7 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
           <button
             onClick={() => setIsMobileMenuOpen(false)}
             className="p-2 bg-navy-900/5 rounded-full text-navy-900 hover:bg-red-50 hover:text-red-500 transition-colors"
+            aria-label="Fechar menu"
           >
             <X size={20} />
           </button>

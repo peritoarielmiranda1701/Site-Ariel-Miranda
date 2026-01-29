@@ -6,9 +6,10 @@ interface SEOProps {
     keywords?: string;
     ogImage?: string;
     ogTitle?: string;
+    favicon?: string;
 }
 
-const SEOHeader = ({ title, description, keywords, ogImage, ogTitle }: SEOProps) => {
+const SEOHeader = ({ title, description, keywords, ogImage, ogTitle, favicon }: SEOProps) => {
     useEffect(() => {
         // --- Title ---
         if (title) {
@@ -41,6 +42,21 @@ const SEOHeader = ({ title, description, keywords, ogImage, ogTitle }: SEOProps)
         // --- Apply Metas ---
         setMeta('description', description || '');
         setMeta('keywords', keywords || '');
+
+        // --- Favicon ---
+        if (favicon) {
+            const faviconUrl = favicon.startsWith('http')
+                ? favicon
+                : `https://admin.peritoarielmiranda.com.br/assets/${favicon}`;
+
+            let link = document.querySelector("link[rel~='icon']");
+            if (!link) {
+                link = document.createElement('link');
+                link.setAttribute('rel', 'icon');
+                document.head.appendChild(link);
+            }
+            link.setAttribute('href', faviconUrl);
+        }
 
         // --- Open Graph (Facebook/WhatsApp) ---
         setOg('og:title', ogTitle || title || '');
