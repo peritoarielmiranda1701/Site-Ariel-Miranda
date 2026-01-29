@@ -79,7 +79,20 @@ export const directus = createDirectus<Schema>('https://admin.peritoarielmiranda
 export const publicDirectus = createDirectus<Schema>('https://admin.peritoarielmiranda.com.br')
     .with(rest());
 
-export const getAssetUrl = (id: string) => {
+// Helper to get optimized images from Directus
+// Usage: getOptimizedImageUrl(id, { width: 800, quality: 80, format: 'webp' })
+export const getOptimizedImageUrl = (id: string, options: { width?: number; height?: number; quality?: number; fit?: 'cover' | 'contain' | 'inside' | 'outside'; format?: 'webp' | 'jpg' | 'png' } = {}) => {
     if (!id) return '';
-    return `https://admin.peritoarielmiranda.com.br/assets/${id}`;
+
+    const params = new URLSearchParams();
+
+    // Default to WebP and 80% quality for performance
+    params.append('format', options.format || 'webp');
+    params.append('quality', (options.quality || 80).toString());
+
+    if (options.width) params.append('width', options.width.toString());
+    if (options.height) params.append('height', options.height.toString());
+    if (options.fit) params.append('fit', options.fit);
+
+    return `https://admin.peritoarielmiranda.com.br/assets/${id}?${params.toString()}`;
 };

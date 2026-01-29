@@ -1,6 +1,7 @@
 import React from 'react';
 import { Award, BookOpen, Scale, CheckCircle2 } from 'lucide-react';
 import { SectionId } from '../types';
+import { getOptimizedImageUrl } from '../lib/directus';
 
 const About: React.FC<{ data?: any }> = ({ data }) => {
   // Default values fallback
@@ -9,9 +10,14 @@ const About: React.FC<{ data?: any }> = ({ data }) => {
   const text1 = data?.text_1 || 'No complexo cenário das perícias técnicas, o Perito Ariel Miranda se destaca pela precisão e imparcialidade de seus laudos.';
   const text2 = data?.text_2 || 'Com atuação nacional e equipe multidisciplinar, somos referência em Engenharia Elétrica e Segurança do Trabalho.';
 
-  const imageUrl = data?.image
-    ? `https://admin.peritoarielmiranda.com.br/assets/${data.image}`
-    : "https://www.cache2net3.com//Repositorio/19349/Conteudos/133153/QUEM%20SOU.png";
+  // Optimize image if it exists in Directus
+  const imageId = data?.image;
+  // Fallback static URL
+  const fallbackImage = "https://www.cache2net3.com//Repositorio/19349/Conteudos/133153/QUEM%20SOU.png";
+
+  const imageUrl = imageId
+    ? getOptimizedImageUrl(imageId, { width: 600, quality: 80, format: 'webp' })
+    : fallbackImage;
 
   const badgeTitle = data?.badge_title || 'Perito Especialista';
   const badgeSubtitle = data?.badge_subtitle || 'Atuação Nacional';
