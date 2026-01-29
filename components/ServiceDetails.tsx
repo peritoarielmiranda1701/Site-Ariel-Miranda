@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Check, Calendar, ArrowRight } from 'lucide-react';
 import { useSiteData } from '../hooks/useSiteData';
@@ -6,10 +6,12 @@ import Header from './Header';
 import Contact from './Contact';
 import SEOHeader from './SEOHeader';
 import { getOptimizedImageUrl } from '../lib/directus';
+import RequestQuoteModal from './RequestQuoteModal';
 
 const ServiceDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const { services, contactInfo, customization } = useSiteData();
+    const [isModalOpen, setModalOpen] = useState(false);
 
     // Scroll to top on mount
     useEffect(() => {
@@ -134,23 +136,21 @@ const ServiceDetails: React.FC = () => {
                                             Solicite um orçamento personalizado para sua necessidade específica.
                                         </p>
 
-                                        <a
-                                            href="#contact"
+                                        <button
+                                            onClick={() => setModalOpen(true)}
                                             className="w-full block text-center py-4 bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold uppercase tracking-widest rounded transition-colors shadow-lg shadow-gold-500/20"
                                         >
-                                            Solicitar Orçamento
-                                        </a>
 
-                                        <div className="mt-8 pt-8 border-t border-white/10">
-                                            <div className="flex items-center gap-3 text-slate-300 mb-2">
-                                                <Calendar size={18} className="text-gold-500" />
-                                                <span className="text-sm">Agendamento rápido</span>
+                                            <div className="mt-8 pt-8 border-t border-white/10">
+                                                <div className="flex items-center gap-3 text-slate-300 mb-2">
+                                                    <Calendar size={18} className="text-gold-500" />
+                                                    <span className="text-sm">Agendamento rápido</span>
+                                                </div>
+                                                <div className="flex items-center gap-3 text-slate-300">
+                                                    <Check size={18} className="text-gold-500" />
+                                                    <span className="text-sm">Atendimento Nacional</span>
+                                                </div>
                                             </div>
-                                            <div className="flex items-center gap-3 text-slate-300">
-                                                <Check size={18} className="text-gold-500" />
-                                                <span className="text-sm">Atendimento Nacional</span>
-                                            </div>
-                                        </div>
                                     </div>
 
                                     {/* Quick Contact Info */}
@@ -171,7 +171,13 @@ const ServiceDetails: React.FC = () => {
             </main>
 
             <Contact data={contactInfo} logo={customization.logo} />
-        </div>
+
+            <RequestQuoteModal
+                isOpen={isModalOpen}
+                onClose={() => setModalOpen(false)}
+                serviceTitle={service.title}
+            />
+        </div >
     );
 };
 
