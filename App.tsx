@@ -4,6 +4,7 @@ import LandingPage from './components/LandingPage';
 import Login from './components/admin/Login';
 import AdminLayout from './components/admin/AdminLayout';
 import Dashboard from './components/admin/Dashboard';
+import ServiceDetails from './components/ServiceDetails';
 import { AuthProvider } from './context/AuthContext';
 
 import CollectionLoader from './components/admin/CollectionLoader';
@@ -27,6 +28,7 @@ function App() {
         <Routes>
           {/* Public Route */}
           <Route path="/" element={<LandingPage />} />
+          <Route path="/servicos/:id" element={<ServiceDetails />} />
 
           {/* Admin Auth Route */}
           <Route path="/painel/login" element={<Login />} />

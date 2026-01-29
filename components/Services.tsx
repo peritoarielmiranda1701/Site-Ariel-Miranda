@@ -2,22 +2,16 @@ import React, { useState } from 'react';
 import { SERVICES } from '../constants';
 import { Service, SectionId } from '../types';
 import { Check } from 'lucide-react';
-import ServiceModal from './ServiceModal';
+import { Link } from 'react-router-dom';
 
 interface ServicesProps {
   data?: Service[];
 }
 
 const Services: React.FC<ServicesProps> = ({ data = SERVICES }) => {
-  const [selectedService, setSelectedService] = useState<Service | null>(null);
+  // Modal logic removed in favor of direct page navigation
 
-  const handleOpenModal = (service: Service) => {
-    setSelectedService(service);
-  };
 
-  const handleCloseModal = () => {
-    setSelectedService(null);
-  };
 
   return (
     <section id={SectionId.SERVICES} className="py-28 bg-slate-50 relative overflow-hidden">
@@ -41,10 +35,10 @@ const Services: React.FC<ServicesProps> = ({ data = SERVICES }) => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {data.map((service, index) => (
-            <div
+            <Link
+              to={`/servicos/${service.id}`}
               key={service.id}
               className={`reveal reveal-delay-${(index + 1) * 100} group relative bg-white p-8 rounded-sm hover:shadow-2xl hover:shadow-navy-900/5 transition-all duration-500 border border-slate-100 hover:border-gold-200 hover:-translate-y-1 flex flex-col h-full cursor-pointer`}
-              onClick={() => handleOpenModal(service)}
             >
               <div className="mb-6">
                 <service.icon size={36} className="text-gold-500 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
@@ -71,27 +65,18 @@ const Services: React.FC<ServicesProps> = ({ data = SERVICES }) => {
               </div>
 
               <div className="pt-6 border-t border-slate-50">
-                <button
+                <span
                   className="inline-flex items-center gap-2 text-[10px] font-bold text-navy-900 uppercase tracking-widest group-hover:text-gold-600 transition-colors"
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent double trigger if parent is also clickable
-                    handleOpenModal(service);
-                  }}
                 >
                   Saiba Mais
                   <span className="transform group-hover:translate-x-1 transition-transform">&rarr;</span>
-                </button>
+                </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
 
-      <ServiceModal
-        isOpen={!!selectedService}
-        service={selectedService}
-        onClose={handleCloseModal}
-      />
     </section>
   );
 };
