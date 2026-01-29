@@ -96,3 +96,9 @@ export const getOptimizedImageUrl = (id: string, options: { width?: number; heig
 
     return `https://admin.peritoarielmiranda.com.br/assets/${id}?${params.toString()}`;
 };
+
+// Helper function for backward compatibility and simple URL generation
+export const getAssetUrl = (id: string) => {
+    if (!id) return '';
+    return `https://admin.peritoarielmiranda.com.br/assets/${id}`;
+};
