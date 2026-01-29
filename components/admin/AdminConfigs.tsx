@@ -21,6 +21,7 @@ export const ServiceFields: any[] = [
     { name: 'icon', label: 'Nome do Ícone (Lucide)', type: 'icon', required: true, helperText: 'Ex: scale, gavel' },
     { name: 'description', label: 'Descrição Curta', type: 'textarea', required: true },
     { name: 'features', label: 'Lista de Diferenciais', type: 'list' },
+    { name: 'hero_image', label: 'Imagem de Cabeçalho (Fundo)', type: 'image' },
     { name: 'details', label: 'Detalhes Completos (Modal)', type: 'textarea', required: false }
 ];
 

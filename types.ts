@@ -7,6 +7,7 @@ export interface Service {
   icon: LucideIcon;
   features: string[];
   details?: string;
+  hero_image?: string;
 }
 
 export interface Differential {

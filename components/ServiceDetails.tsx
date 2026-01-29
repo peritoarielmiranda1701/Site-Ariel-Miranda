@@ -5,6 +5,7 @@ import { useSiteData } from '../hooks/useSiteData';
 import Header from './Header';
 import Contact from './Contact';
 import SEOHeader from './SEOHeader';
+import { getOptimizedImageUrl } from '../lib/directus';
 
 const ServiceDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -43,8 +44,23 @@ const ServiceDetails: React.FC = () => {
             <main className="flex-grow">
                 {/* Hero Section */}
                 <section className="relative bg-navy-900 py-32 lg:py-40 overflow-hidden">
-                    <div className="absolute inset-0 bg-noise opacity-10"></div>
-                    <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-gold-500/10 to-transparent"></div>
+                    {service.hero_image ? (
+                        <>
+                            <div className="absolute inset-0 z-0">
+                                <img
+                                    src={getOptimizedImageUrl(service.hero_image, { width: 1920, quality: 80, format: 'webp' })}
+                                    alt={service.title}
+                                    className="w-full h-full object-cover opacity-40"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/90 to-navy-900/40"></div>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className="absolute inset-0 bg-noise opacity-10"></div>
+                            <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-gold-500/10 to-transparent"></div>
+                        </>
+                    )}
 
                     <div className="container mx-auto px-4 sm:px-6 relative z-10">
                         <Link to="/#services" className="inline-flex items-center gap-2 text-gold-500 hover:text-gold-400 mb-8 transition-colors text-sm font-bold uppercase tracking-widest">

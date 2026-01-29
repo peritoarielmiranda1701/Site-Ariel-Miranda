@@ -7,6 +7,7 @@ export interface DirectusService {
     icon: string;
     features: string[]; // JSON list
     details?: string;
+    hero_image?: string;
 }
 
 export interface DirectusTestimonial {
