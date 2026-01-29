@@ -140,17 +140,19 @@ const ServiceDetails: React.FC = () => {
                                             onClick={() => setModalOpen(true)}
                                             className="w-full block text-center py-4 bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold uppercase tracking-widest rounded transition-colors shadow-lg shadow-gold-500/20"
                                         >
+                                            Solicitar Orçamento
+                                        </button>
 
-                                            <div className="mt-8 pt-8 border-t border-white/10">
-                                                <div className="flex items-center gap-3 text-slate-300 mb-2">
-                                                    <Calendar size={18} className="text-gold-500" />
-                                                    <span className="text-sm">Agendamento rápido</span>
-                                                </div>
-                                                <div className="flex items-center gap-3 text-slate-300">
-                                                    <Check size={18} className="text-gold-500" />
-                                                    <span className="text-sm">Atendimento Nacional</span>
-                                                </div>
+                                        <div className="mt-8 pt-8 border-t border-white/10">
+                                            <div className="flex items-center gap-3 text-slate-300 mb-2">
+                                                <Calendar size={18} className="text-gold-500" />
+                                                <span className="text-sm">Agendamento rápido</span>
                                             </div>
+                                            <div className="flex items-center gap-3 text-slate-300">
+                                                <Check size={18} className="text-gold-500" />
+                                                <span className="text-sm">Atendimento Nacional</span>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     {/* Quick Contact Info */}

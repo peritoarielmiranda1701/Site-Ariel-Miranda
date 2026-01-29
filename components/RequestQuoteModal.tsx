@@ -41,7 +41,7 @@ const RequestQuoteModal: React.FC<RequestQuoteModalProps> = ({ isOpen, onClose, 
         setStatus('submitting');
 
         try {
-            await directus.request(createItem('messages', {
+            await directus.request(createItem('messages' as any, {
                 name: formState.name,
                 email: formState.email,
                 phone: formState.phone,
