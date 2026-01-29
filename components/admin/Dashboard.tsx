@@ -11,6 +11,34 @@ const Dashboard = () => {
     const [apiStatus, setApiStatus] = useState<'online' | 'offline' | 'checking'>('checking');
     const [fixing, setFixing] = useState(false);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [services, testimonials, process_steps, faqs] = await Promise.all([
+                    directus.request(aggregate('services' as any, { aggregate: { count: '*' } })).catch(() => [{ count: 0 }]),
+                    directus.request(aggregate('testimonials' as any, { aggregate: { count: '*' } })).catch(() => [{ count: 0 }]),
+                    directus.request(aggregate('process_steps' as any, { aggregate: { count: '*' } })).catch(() => [{ count: 0 }]),
+                    directus.request(aggregate('faqs' as any, { aggregate: { count: '*' } })).catch(() => [{ count: 0 }])
+                ]);
+
+                setCounts({
+                    services: Number(services[0]?.count) || 0,
+                    testimonials: Number(testimonials[0]?.count) || 0,
+                    processos: Number(process_steps[0]?.count) || 0,
+                    faqs: Number(faqs[0]?.count) || 0
+                });
+                setApiStatus('online');
+            } catch (e) {
+                console.error("Dashboard Error:", e);
+                setApiStatus('offline');
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const isLoading = apiStatus === 'checking';
+
     const fixSchema = async () => {
         try {
             setFixing(true);
