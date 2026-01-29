@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Menu, X, Phone, Mail, MapPin, ArrowRight, Instagram, Linkedin, MessageCircle } from 'lucide-react';
 import { NAV_LINKS, CONTACT_INFO } from '../constants';
 import { SectionId } from '../types';
@@ -6,6 +7,8 @@ import { SectionId } from '../types';
 const Header: React.FC<{ logo?: string }> = ({ logo }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   const logoUrl = logo
     ? `https://admin.peritoarielmiranda.com.br/assets/${logo}`
@@ -50,7 +53,7 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
       </div>
 
       <header
-        className={`fixed w-full z-40 transition-all duration-500 ${isScrolled
+        className={`fixed w-full z-40 transition-all duration-500 ${isScrolled || !isHomePage
           ? 'top-0 bg-white shadow-lg py-3'
           : 'md:top-[38px] top-0 bg-transparent py-5 shadow-none'
           }`}
@@ -58,7 +61,7 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
         <div className="container mx-auto px-4 sm:px-6 flex justify-between items-center">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <a href={`#${SectionId.HOME}`} className="flex flex-col group cursor-pointer" aria-label="Ariel Miranda - Início">
+            <a href={isHomePage ? `#${SectionId.HOME}` : '/'} className="flex flex-col group cursor-pointer" aria-label="Ariel Miranda - Início">
               <img
                 src={logoUrl}
                 alt="Ariel Miranda"
@@ -71,25 +74,28 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className={`relative text-xs font-bold uppercase tracking-widest py-2 group transition-colors ${isScrolled ? 'text-navy-800' : 'text-white'
-                  } hover:text-gold-600`}
-              >
-                {link.label}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gold-500 transition-all duration-300 group-hover:w-full"></span>
-              </a>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const href = isHomePage ? link.href : `/${link.href}`;
+              return (
+                <a
+                  key={link.label}
+                  href={href}
+                  className={`relative text-xs font-bold uppercase tracking-widest py-2 group transition-colors ${isScrolled || !isHomePage ? 'text-navy-800' : 'text-white'
+                    } hover:text-gold-600`}
+                >
+                  {link.label}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gold-500 transition-all duration-300 group-hover:w-full"></span>
+                </a>
+              );
+            })}
 
             {/* Social Icons */}
-            <div className={`flex items-center gap-4 ml-4 pl-4 border-l ${isScrolled ? 'border-slate-200' : 'border-white/20'}`}>
+            <div className={`flex items-center gap-4 ml-4 pl-4 border-l ${isScrolled || !isHomePage ? 'border-slate-200' : 'border-white/20'}`}>
               <a
                 href={CONTACT_INFO.social.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`transition-transform hover:-translate-y-0.5 hover:text-gold-600 ${isScrolled ? 'text-navy-900' : 'text-white'
+                className={`transition-transform hover:-translate-y-0.5 hover:text-gold-600 ${isScrolled || !isHomePage ? 'text-navy-900' : 'text-white'
                   }`}
                 aria-label="Instagram"
               >
@@ -99,7 +105,7 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
                 href={CONTACT_INFO.social.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`transition-transform hover:-translate-y-0.5 hover:text-gold-600 ${isScrolled ? 'text-navy-900' : 'text-white'
+                className={`transition-transform hover:-translate-y-0.5 hover:text-gold-600 ${isScrolled || !isHomePage ? 'text-navy-900' : 'text-white'
                   }`}
                 aria-label="LinkedIn"
               >
@@ -109,7 +115,7 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
                 href={CONTACT_INFO.social.whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`transition-transform hover:-translate-y-0.5 hover:text-gold-600 ${isScrolled ? 'text-navy-900' : 'text-white'
+                className={`transition-transform hover:-translate-y-0.5 hover:text-gold-600 ${isScrolled || !isHomePage ? 'text-navy-900' : 'text-white'
                   }`}
                 aria-label="WhatsApp"
               >
@@ -120,7 +126,7 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
 
           {/* Mobile Menu Button */}
           <button
-            className={`md:hidden p-2 hover:bg-white/20 rounded-md transition-colors ${isScrolled ? 'text-navy-900' : 'text-white'
+            className={`md:hidden p-2 hover:bg-white/20 rounded-md transition-colors ${isScrolled || !isHomePage ? 'text-navy-900' : 'text-white'
               }`}
             onClick={() => setIsMobileMenuOpen(true)}
             aria-label="Abrir menu"
@@ -167,17 +173,20 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
 
         {/* Sidebar Links */}
         <nav className="flex-1 overflow-y-auto py-6 px-6 space-y-1">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="group flex items-center justify-between py-4 text-navy-900 font-heading font-bold uppercase text-sm tracking-wider border-b border-navy-900/5 hover:text-gold-600 hover:pl-2 transition-all duration-300"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              {link.label}
-              <ArrowRight size={16} className="text-slate-400 group-hover:text-gold-500 transition-colors" />
-            </a>
-          ))}
+          {NAV_LINKS.map((link) => {
+            const href = isHomePage ? link.href : `/${link.href}`;
+            return (
+              <a
+                key={link.label}
+                href={href}
+                className="group flex items-center justify-between py-4 text-navy-900 font-heading font-bold uppercase text-sm tracking-wider border-b border-navy-900/5 hover:text-gold-600 hover:pl-2 transition-all duration-300"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {link.label}
+                <ArrowRight size={16} className="text-slate-400 group-hover:text-gold-500 transition-colors" />
+              </a>
+            );
+          })}
         </nav>
 
         {/* Sidebar Footer / CTA */}
