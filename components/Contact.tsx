@@ -73,6 +73,8 @@ const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo }) => {
                 src={logoUrl}
                 alt="Logo"
                 className="h-24 md:h-32 w-auto object-contain mb-2"
+                width="400"
+                height="128"
               />
               <p className="text-slate-400 text-sm leading-relaxed max-w-md font-light">
                 Compromisso com a verdade real. Serviços de perícia técnica com alto padrão de qualidade e rigor científico.

@@ -63,6 +63,8 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
                 src={logoUrl}
                 alt="Ariel Miranda"
                 className="h-10 md:h-12 w-auto object-contain"
+                width="168"
+                height="48"
               />
             </a>
           </div>
@@ -150,6 +152,8 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
               src={logoUrl}
               alt="Ariel Miranda"
               className="h-10 w-auto object-contain"
+              width="140"
+              height="40"
             />
           </div>
           <button

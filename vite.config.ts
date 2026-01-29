@@ -16,7 +16,7 @@ export default defineConfig({
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'directus': ['@directus/sdk'],
-          'icons': ['lucide-react'],
+          // 'icons': ['lucide-react'], // Let Vite split icons automatically for better tree-shaking
         },
       },
     },
