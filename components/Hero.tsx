@@ -13,85 +13,70 @@ interface HeroProps {
     subtitle?: string;
     cta?: string;
     bg?: string;
+    hero_bg?: string;
   }
 }
 
 const Hero: React.FC<HeroProps> = ({ data }) => {
-  // Determine background image
-    : HERO_IMAGE;
 
-// Optimized images logic
-const bgImageId = data?.bg;
-// Fallback static image if no dynamic image is set
-const fallbackBg = "https://images.unsplash.com/photo-1581092921461-eab62e97a780?q=80&w=2070&auto=format&fit=crop";
+  const bgImageId = data?.hero_bg || data?.bg;
+  // Fallback static image if no dynamic image is set
+  const fallbackBg = HERO_IMAGE;
 
-// Responsive optimized images
-const bgImageMobile = bgImageId ? getOptimizedImageUrl(bgImageId, { width: 800, quality: 75, format: 'webp' }) : fallbackBg;
-const bgImageDesktop = bgImageId ? getOptimizedImageUrl(bgImageId, { width: 1920, quality: 80, format: 'webp' }) : fallbackBg;
+  // Responsive optimized images
+  const bgImageMobile = bgImageId ? getOptimizedImageUrl(bgImageId, { width: 800, quality: 75, format: 'webp' }) : fallbackBg;
+  const bgImageDesktop = bgImageId ? getOptimizedImageUrl(bgImageId, { width: 1920, quality: 80, format: 'webp' }) : fallbackBg;
 
 
-// Extract specific parts matching the 'bold/gold' syntax
-const renderRichText = (text: string, isTitle: boolean = false) => {
-  if (!text) return null;
+  // Extract specific parts matching the 'bold/gold' syntax
+  const renderRichText = (text: string, isTitle: boolean = false) => {
+    if (!text) return null;
 
-  // Split by newlines first
-  const lines = text.split('\n');
+    // Split by newlines first
+    const lines = text.split('\n');
 
-  return lines.map((line, lineIndex) => {
-    // For each line, parse *bold* segments
-    const parts = line.split(/(\*[^*]+\*)/g); // split by *text*
+    return lines.map((line, lineIndex) => {
+      // For each line, parse *bold* segments
+      const parts = line.split(/(\*[^*]+\*)/g); // split by *text*
 
-    // Styling logic: First line is standard (large), subsequent lines are smaller
-    const lineClass = isTitle
-      ? ""
-      : lineIndex === 0
-        ? "block text-lg md:text-xl leading-relaxed text-slate-300"
-        : "block text-sm md:text-base mt-3 font-normal text-slate-400 opacity-90";
+      // Styling logic: First line is standard (large), subsequent lines are smaller
+      const lineClass = isTitle
+        ? ""
+        : lineIndex === 0
+          ? "block text-lg md:text-xl leading-relaxed text-slate-300"
+          : "block text-sm md:text-base mt-3 font-normal text-slate-400 opacity-90";
 
-    return (
-      <span key={lineIndex} className={lineClass}>
-        {parts.map((part, partIndex) => {
-          if (part.startsWith('*') && part.endsWith('*')) {
-            const content = part.slice(1, -1);
-            if (isTitle) {
-              return (
-                <span key={partIndex} className="text-gradient-gold drop-shadow-2xl">
-                  {content}
-                </span>
-              );
-            } else {
-              return (
-                <strong key={partIndex} className="text-white font-medium">
-                  {content}
-                </strong>
-              );
+      return (
+        <span key={lineIndex} className={lineClass}>
+          {parts.map((part, partIndex) => {
+            if (part.startsWith('*') && part.endsWith('*')) {
+              const content = part.slice(1, -1);
+              if (isTitle) {
+                return (
+                  <span key={partIndex} className="text-gradient-gold drop-shadow-2xl">
+                    {content}
+                  </span>
+                );
+              } else {
+                return (
+                  <strong key={partIndex} className="text-white font-medium">
+                    {content}
+                  </strong>
+                );
+              }
             }
-          }
-          return part;
-        })}
-      </span>
-    );
-  });
-};
+            return part;
+          })}
+        </span>
+      );
+    });
+  };
 
-const defaultTitle = "Excelência Técnica a\n*Serviço da Verdade*";
-const defaultSubtitle = "*Perito Ariel Miranda* — Especialista em perícias judiciais e extrajudiciais.";
-const defaultSubtitle2 = "Laudos técnicos em Engenharia Elétrica, Segurança do Trabalho e Forense Digital.";
+  const defaultTitle = "Excelência Técnica a\n*Serviço da Verdade*";
+  const defaultSubtitle = "*Perito Ariel Miranda* — Especialista em perícias judiciais e extrajudiciais.";
+  const defaultSubtitle2 = "Laudos técnicos em Engenharia Elétrica, Segurança do Trabalho e Forense Digital.";
 
-return (
-  <section
-    id={SectionId.HOME}
-    className="relative min-h-[95vh] flex items-center pt-24 pb-20 overflow-hidden"
-  >
-    const bgImageId = data?.hero_bg;
-    // Fallback static image if no dynamic image is set
-    const fallbackBg = "https://images.unsplash.com/photo-1581092921461-eab62e97a780?q=80&w=2070&auto=format&fit=crop";
-
-    // Responsive optimized images
-    const bgImageMobile = bgImageId ? getOptimizedImageUrl(bgImageId, {width: 800, quality: 75, format: 'webp' }) : fallbackBg;
-    const bgImageDesktop = bgImageId ? getOptimizedImageUrl(bgImageId, {width: 1920, quality: 80, format: 'webp' }) : fallbackBg;
-
-    return (
+  return (
     <section
       id={SectionId.HOME}
       className="relative min-h-[95vh] flex items-center pt-24 pb-20 overflow-hidden"
@@ -221,7 +206,7 @@ return (
         </div>
       </div>
     </section>
-    );
+  );
 };
 
-    export default Hero;
+export default Hero;
