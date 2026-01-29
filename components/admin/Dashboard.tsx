@@ -2,41 +2,44 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Briefcase, MessageSquare, Layout, HelpCircle, Loader2, Settings, Shield, UserCheck, FileText } from 'lucide-react';
 import { directus } from '../../lib/directus';
-import { aggregate } from '@directus/sdk';
+import { aggregate, createField } from '@directus/sdk';
 
 const Dashboard = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const navigate = useNavigate();
     const [counts, setCounts] = useState({ services: 0, testimonials: 0, processos: 0, faqs: 0 });
     const [apiStatus, setApiStatus] = useState<'online' | 'offline' | 'checking'>('checking');
+    const [fixing, setFixing] = useState(false);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [services, testimonials, process_steps, faqs] = await Promise.all([
-                    directus.request(aggregate('services' as any, { aggregate: { count: '*' } })).catch(() => [{ count: 0 }]),
-                    directus.request(aggregate('testimonials' as any, { aggregate: { count: '*' } })).catch(() => [{ count: 0 }]),
-                    directus.request(aggregate('process_steps' as any, { aggregate: { count: '*' } })).catch(() => [{ count: 0 }]),
-                    directus.request(aggregate('faqs' as any, { aggregate: { count: '*' } })).catch(() => [{ count: 0 }])
-                ]);
-
-                setCounts({
-                    services: Number(services[0]?.count) || 0,
-                    testimonials: Number(testimonials[0]?.count) || 0,
-                    processos: Number(process_steps[0]?.count) || 0,
-                    faqs: Number(faqs[0]?.count) || 0
-                });
-                setApiStatus('online');
-            } catch (e) {
-                console.error("Dashboard Error:", e);
-                setApiStatus('offline');
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    const isLoading = apiStatus === 'checking';
+    const fixSchema = async () => {
+        try {
+            setFixing(true);
+            // Create hero_image field in services collection
+            await directus.request(createField('services', {
+                field: 'hero_image',
+                type: 'uuid',
+                meta: {
+                    interface: 'file-image',
+                    special: ['file'],
+                    note: 'Imagem de Cabeçalho do Serviço'
+                },
+                schema: {
+                    is_nullable: true,
+                }
+            })).catch(err => {
+                // If error is "field already exists", ignore it
+                if (err?.errors?.[0]?.extensions?.code !== 'FIELD_ALREADY_EXISTS') {
+                    throw err;
+                }
+            });
+            alert('Banco de dados atualizado com sucesso! Tente salvar a imagem novamente.');
+        } catch (e) {
+            console.error('Fix failed:', e);
+            alert('Erro ao atualizar banco de dados. Verifique o console.');
+        } finally {
+            setFixing(false);
+        }
+    };
 
     const stats = [
         { label: 'Serviços Ativos', value: counts.services.toString(), icon: Briefcase, color: 'text-white', bg: 'bg-navy-800', border: 'border-navy-700', path: '/painel/servicos' },
@@ -161,6 +164,21 @@ const Dashboard = () => {
                     <Link to="/painel/info" className="w-full py-2.5 rounded-lg bg-white/10 hover:bg-white/20 border border-white/5 text-center text-xs font-bold uppercase tracking-wider transition-colors">
                         Acessar Configurações
                     </Link>
+                </div>
+
+                {/* Maintenance Section (Visible only when API is online or for diagnostics) */}
+                <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl p-6 flex flex-col justify-center items-center text-center">
+                    <Shield className="w-8 h-8 text-slate-300 mb-3" />
+                    <h3 className="font-bold text-slate-600 text-sm mb-1">Manutenção do Sistema</h3>
+                    <p className="text-xs text-slate-400 mb-4 max-w-[200px]">Use caso perceba erros ao salvar novos campos ou imagens.</p>
+                    <button
+                        onClick={fixSchema}
+                        disabled={fixing}
+                        className="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg text-xs font-bold uppercase tracking-wide flex items-center gap-2 transition-all hover:border-gold-500/30 hover:text-gold-600"
+                    >
+                        {fixing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Settings className="w-3 h-3" />}
+                        {fixing ? 'Atualizando...' : 'Atualizar Estrutura do Banco'}
+                    </button>
                 </div>
             </div>
 
