@@ -53,7 +53,7 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
       </div>
 
       <header
-        className={`fixed w-full z-40 transition-all duration-500 ${isScrolled || !isHomePage
+        className={`fixed w-full z-40 transition-all duration-500 ${isScrolled
           ? 'top-0 bg-white shadow-lg py-3'
           : 'md:top-[38px] top-0 bg-transparent py-5 shadow-none'
           }`}
@@ -80,7 +80,7 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
                 <a
                   key={link.label}
                   href={href}
-                  className={`relative text-xs font-bold uppercase tracking-widest py-2 group transition-colors ${isScrolled || !isHomePage ? 'text-navy-800' : 'text-white'
+                  className={`relative text-xs font-bold uppercase tracking-widest py-2 group transition-colors ${isScrolled ? 'text-navy-800' : 'text-white'
                     } hover:text-gold-600`}
                 >
                   {link.label}
@@ -90,12 +90,12 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
             })}
 
             {/* Social Icons */}
-            <div className={`flex items-center gap-4 ml-4 pl-4 border-l ${isScrolled || !isHomePage ? 'border-slate-200' : 'border-white/20'}`}>
+            <div className={`flex items-center gap-4 ml-4 pl-4 border-l ${isScrolled ? 'border-slate-200' : 'border-white/20'}`}>
               <a
                 href={CONTACT_INFO.social.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`transition-transform hover:-translate-y-0.5 hover:text-gold-600 ${isScrolled || !isHomePage ? 'text-navy-900' : 'text-white'
+                className={`transition-transform hover:-translate-y-0.5 hover:text-gold-600 ${isScrolled ? 'text-navy-900' : 'text-white'
                   }`}
                 aria-label="Instagram"
               >
@@ -105,7 +105,7 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
                 href={CONTACT_INFO.social.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`transition-transform hover:-translate-y-0.5 hover:text-gold-600 ${isScrolled || !isHomePage ? 'text-navy-900' : 'text-white'
+                className={`transition-transform hover:-translate-y-0.5 hover:text-gold-600 ${isScrolled ? 'text-navy-900' : 'text-white'
                   }`}
                 aria-label="LinkedIn"
               >
@@ -115,7 +115,7 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
                 href={CONTACT_INFO.social.whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`transition-transform hover:-translate-y-0.5 hover:text-gold-600 ${isScrolled || !isHomePage ? 'text-navy-900' : 'text-white'
+                className={`transition-transform hover:-translate-y-0.5 hover:text-gold-600 ${isScrolled ? 'text-navy-900' : 'text-white'
                   }`}
                 aria-label="WhatsApp"
               >
@@ -126,7 +126,7 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
 
           {/* Mobile Menu Button */}
           <button
-            className={`md:hidden p-2 hover:bg-white/20 rounded-md transition-colors ${isScrolled || !isHomePage ? 'text-navy-900' : 'text-white'
+            className={`md:hidden p-2 hover:bg-white/20 rounded-md transition-colors ${isScrolled ? 'text-navy-900' : 'text-white'
               }`}
             onClick={() => setIsMobileMenuOpen(true)}
             aria-label="Abrir menu"

@@ -40,9 +40,9 @@ const ServiceDetails: React.FC = () => {
 
             <Header logo={customization.logo} />
 
-            <main className="flex-grow pt-20">
+            <main className="flex-grow">
                 {/* Hero Section */}
-                <section className="relative bg-navy-900 py-20 lg:py-32 overflow-hidden">
+                <section className="relative bg-navy-900 py-32 lg:py-40 overflow-hidden">
                     <div className="absolute inset-0 bg-noise opacity-10"></div>
                     <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-gold-500/10 to-transparent"></div>
 
