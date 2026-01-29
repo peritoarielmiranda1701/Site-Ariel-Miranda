@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Briefcase, MessageSquare, Layout, HelpCircle, Loader2, Settings, Shield, UserCheck, FileText } from 'lucide-react';
+import { Briefcase, MessageSquare, Layout, HelpCircle, Loader2, Settings, Shield, UserCheck, FileText, Star } from 'lucide-react';
 import { directus } from '../../lib/directus';
 import { aggregate, createField } from '@directus/sdk';
 
@@ -165,6 +165,7 @@ const Dashboard = () => {
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                         {[
                             { label: 'Serviços', icon: Briefcase, path: '/painel/servicos' },
+                            { label: 'Diferenciais', icon: Star, path: '/painel/diferenciais' },
                             { label: 'Depoimentos', icon: MessageSquare, path: '/painel/depoimentos' },
                             { label: 'Fluxo', icon: Layout, path: '/painel/processo' },
                             { label: 'FAQs', icon: HelpCircle, path: '/painel/faqs' },
