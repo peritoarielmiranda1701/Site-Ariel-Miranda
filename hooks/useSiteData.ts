@@ -77,7 +77,8 @@ export function useSiteData() {
                         description: s.description,
                         icon: getIcon(s.icon),
                         features: s.features,
-                        details: s.details
+                        details: s.details,
+                        hero_image: s.hero_image
                     })));
                 }
 
