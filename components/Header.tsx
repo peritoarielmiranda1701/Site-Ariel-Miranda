@@ -55,7 +55,7 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
       <header
         className={`fixed w-full z-40 transition-all duration-500 ${isScrolled
           ? 'top-0 bg-white shadow-lg py-2'
-          : 'md:top-[38px] top-0 bg-transparent py-6 md:py-8 shadow-none'
+          : 'md:top-[30px] top-3 bg-transparent py-6 md:py-8 shadow-none'
           }`}
       >
         <div className="container mx-auto px-4 sm:px-6 flex justify-between items-center">
