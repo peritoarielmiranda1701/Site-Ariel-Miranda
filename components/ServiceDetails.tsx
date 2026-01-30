@@ -65,9 +65,7 @@ const ServiceDetails: React.FC = () => {
                     )}
 
                     <div className="container mx-auto px-4 sm:px-6 relative z-10">
-                        <Link to="/#services" className="inline-flex items-center gap-2 text-gold-500 hover:text-gold-400 mb-8 transition-colors text-sm font-bold uppercase tracking-widest">
-                            <ArrowLeft size={16} /> Voltar para Serviços
-                        </Link>
+
 
                         <div className="max-w-4xl">
                             <div className="flex items-center gap-4 mb-6">
