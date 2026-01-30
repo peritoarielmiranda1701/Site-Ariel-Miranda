@@ -79,7 +79,7 @@ const Hero: React.FC<HeroProps> = ({ data }) => {
   return (
     <section
       id={SectionId.HOME}
-      className="relative min-h-[95vh] flex items-center pt-28 md:pt-36 pb-20 overflow-hidden"
+      className="relative min-h-[95vh] flex items-center pt-24 md:pt-32 pb-20 overflow-hidden"
     >
       {/* Background with Optimized Image & Srcset for Mobile/Desktop */}
       <img
