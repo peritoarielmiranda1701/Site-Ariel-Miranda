@@ -84,8 +84,8 @@ const AdminLayout = () => {
                         </div>
                     )}
                     <div>
-                        <h2 className="text-white text-sm font-bold leading-tight tracking-tight">Painel Admin</h2>
-                        <p className="text-gold-500/80 text-[10px] uppercase font-bold tracking-widest">Sovereign v2</p>
+                        <h2 className="text-white text-sm font-bold leading-tight tracking-tight">Site Painel Admin</h2>
+                        <p className="text-gold-500/80 text-[10px] uppercase font-bold tracking-widest">Ariel Miranda v2</p>
                     </div>
                 </div>
 
@@ -118,7 +118,7 @@ const AdminLayout = () => {
                         <LogOut className="w-3 h-3 text-slate-500 group-hover:text-red-400" />
                     </button>
                     <p className="text-[10px] text-center text-slate-600 mt-4 font-medium tracking-wide">
-                        &copy; 2024 Perito Ariel Miranda
+                        &copy; 2026 Perito Ariel Miranda
                     </p>
                 </div>
             </aside>

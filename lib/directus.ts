@@ -69,6 +69,9 @@ interface Schema {
     differentials: DirectusDifferential[];
     Informacoes_Gerais: DirectusSiteInfo; // Singleton
     hero_stats: DirectusHeroStats; // Singleton
+    seo_config: any; // Singleton
+    about_section: any; // Singleton
+    messages: any[]; // Collection
 }
 
 // Client for Authenticated Admin Actions
