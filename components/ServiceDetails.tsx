@@ -64,7 +64,7 @@ const ServiceDetails: React.FC = () => {
                         </>
                     )}
 
-                    <div className="container mx-auto px-4 sm:px-6 relative z-10">
+                    <div className="container top-12 mx-auto px-4 sm:px-6 relative z-10">
 
 
                         <div className="max-w-4xl">
