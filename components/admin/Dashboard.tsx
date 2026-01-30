@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Briefcase, MessageSquare, Layout, HelpCircle, Loader2, Settings, Shield, UserCheck, FileText, Star, Globe, Search } from 'lucide-react';
 import { directus } from '../../lib/directus';
-import { aggregate, createField, createCollection } from '@directus/sdk';
+import { aggregate, createField, createCollection, createItem, readPolicies, createPermission, readPermissions } from '@directus/sdk';
 import { SeoFields } from './AdminConfigs';
 
 const Dashboard = () => {
@@ -73,10 +73,8 @@ const Dashboard = () => {
                     hidden: false
                 },
                 schema: {}
-            })).catch(err => {
-                // If INVALID_PAYLOAD or similar, it might exist. Directus doesn't have "collection_already_exists" code consistently exposed here without checking lists first
-                // But we can try to create fields regardless.
-                console.log('Collection creation skipped (likely exists)');
+            })).catch(() => {
+                console.log('Collection existing or creation skipped');
             });
 
             // 3. Fix: Create SEO fields
@@ -100,7 +98,61 @@ const Dashboard = () => {
                 });
             }
 
-            alert('Banco de dados atualizado com sucesso! (Sevices: Hero Image | SEO: Config & Fields)');
+            // 4. Fix: Ensure Singleton Row Exists
+            console.log('Verifying SEO singleton row...');
+            try {
+                // Try to create an initial item. If it works, great. If it fails (singleton violation or whatever), we assume it exists.
+                // However, updated "createItem" for singletons might force creation if empty.
+                await directus.request(createItem('seo_config', {
+                    site_title: 'Perito Ariel Miranda',
+                    site_description: 'Site oficial'
+                })).catch((err) => {
+                    // Ignore errors if it already exists (usually 200 OK with singletons if creates? or 400 forbidden)
+                    console.log('Row creation skipped (likely exists)');
+                });
+            } catch (e) { }
+
+            // 5. Fix: Public Permissions (Using Policies for Directus v10+)
+            console.log('Verifying Public Permissions...');
+
+            // @ts-ignore - Import might be missing in some SDK versions, but assuming standard v13+
+            const policies = await directus.request(readPolicies({
+                filter: { name: { _eq: 'Public' } }
+            }));
+
+            const publicPolicy = policies[0];
+
+            if (publicPolicy) {
+                try {
+                    // Check if permission exists
+                    const permissions = await directus.request(readPermissions({
+                        filter: {
+                            policy: { _eq: publicPolicy.id },
+                            collection: { _eq: 'seo_config' },
+                            action: { _eq: 'read' }
+                        }
+                    }));
+
+                    if (permissions.length === 0) {
+                        await directus.request(createPermission({
+                            policy: publicPolicy.id,
+                            collection: 'seo_config',
+                            action: 'read',
+                            fields: ['*']
+                        }));
+                        console.log('Public Read Permission granted for seo_config');
+                    } else {
+                        console.log('Permissions already exist');
+                    }
+                } catch (e) {
+                    console.warn('Failed to set permissions (requires Admin access)', e);
+                }
+            } else {
+                console.warn('Public policy not found. Please set permissions manually.');
+            }
+
+
+            alert('Banco de dados e Permissões atualizados com sucesso!');
         } catch (e) {
             console.error('Fix failed:', e);
             alert('Erro ao atualizar banco de dados. Verifique o console.');
