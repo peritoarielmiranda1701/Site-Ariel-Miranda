@@ -54,8 +54,8 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
 
       <header
         className={`fixed w-full z-40 transition-all duration-500 ${isScrolled
-          ? 'top-0 bg-white shadow-lg py-2'
-          : 'md:top-[38px] top-0 bg-transparent py-3 shadow-none'
+          ? 'top-0 bg-white shadow-lg py-1'
+          : 'md:top-[38px] top-0 bg-transparent py-2 shadow-none'
           }`}
       >
         <div className="container mx-auto px-4 sm:px-6 flex justify-between items-center">
@@ -65,9 +65,9 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
               <img
                 src={logoUrl}
                 alt="Ariel Miranda"
-                className="h-12 md:h-16 w-auto object-contain"
-                width="200"
-                height="64"
+                className="h-14 md:h-20 w-auto object-contain"
+                width="240"
+                height="80"
               />
             </a>
           </div>
