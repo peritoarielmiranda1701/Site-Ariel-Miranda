@@ -59,15 +59,15 @@ export function useSiteData() {
         async function fetchData() {
             try {
                 const [servicesData, testimonialsData, faqsData, processData, infoData, heroData, differentialsData, aboutData, seoData] = await Promise.all([
-                    publicDirectus.request(readItems('services')),
-                    publicDirectus.request(readItems('testimonials')),
-                    publicDirectus.request(readItems('faqs')),
-                    publicDirectus.request(readItems('process_steps')),
-                    publicDirectus.request(readSingleton('Informacoes_Gerais')),
-                    publicDirectus.request(readSingleton('hero_stats')),
-                    publicDirectus.request(readItems('differentials')),
-                    publicDirectus.request(readSingleton('about_section' as any)),
-                    publicDirectus.request(readSingleton('seo_config' as any))
+                    publicDirectus.request(readItems('services')).catch(e => { console.error('Error fetching services:', e); return null; }),
+                    publicDirectus.request(readItems('testimonials')).catch(e => { console.error('Error fetching testimonials:', e); return null; }),
+                    publicDirectus.request(readItems('faqs')).catch(e => { console.error('Error fetching faqs:', e); return null; }),
+                    publicDirectus.request(readItems('process_steps')).catch(e => { console.error('Error fetching process_steps:', e); return null; }),
+                    publicDirectus.request(readSingleton('Informacoes_Gerais')).catch(e => { console.error('Error fetching Informacoes_Gerais:', e); return null; }),
+                    publicDirectus.request(readSingleton('hero_stats')).catch(e => { console.error('Error fetching hero_stats:', e); return null; }),
+                    publicDirectus.request(readItems('differentials')).catch(e => { console.error('Error fetching differentials:', e); return null; }),
+                    publicDirectus.request(readSingleton('about_section' as any)).catch(e => { console.error('Error fetching about_section:', e); return null; }),
+                    publicDirectus.request(readSingleton('seo_config' as any)).catch(e => { console.error('Error fetching seo_config:', e); return null; })
                 ]);
 
                 if (servicesData) {
