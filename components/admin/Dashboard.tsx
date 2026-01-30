@@ -142,7 +142,28 @@ const Dashboard = () => {
                         }));
                         console.log('Public Read Permission granted for seo_config');
                     } else {
-                        console.log('Permissions already exist');
+                        console.log('Permissions already exist for seo_config');
+                    }
+
+                    // 5b. Fix: Public Permissions for FILES (Images)
+                    const filePermissions = await directus.request(readPermissions({
+                        filter: {
+                            policy: { _eq: publicPolicy.id },
+                            collection: { _eq: 'directus_files' },
+                            action: { _eq: 'read' }
+                        }
+                    }));
+
+                    if (filePermissions.length === 0) {
+                        await directus.request(createPermission({
+                            policy: publicPolicy.id,
+                            collection: 'directus_files',
+                            action: 'read',
+                            fields: ['*']
+                        }));
+                        console.log('Public Read Permission granted for directus_files');
+                    } else {
+                        console.log('Permissions already exist for directus_files');
                     }
                 } catch (e) {
                     console.warn('Failed to set permissions (requires Admin access)', e);
