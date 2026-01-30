@@ -65,7 +65,7 @@ const Header: React.FC<{ logo?: string }> = ({ logo }) => {
               <img
                 src={logoUrl}
                 alt="Ariel Miranda"
-                className={`w-auto object-contain transition-all duration-500 ${isScrolled ? 'h-14 md:h-16' : 'h-20 md:h-32'}`}
+                className={`w-auto object-contain transition-all duration-500 ${isScrolled ? 'h-12 md:h-14' : 'h-16 md:h-24'}`}
                 width="240"
                 height="80"
               />
