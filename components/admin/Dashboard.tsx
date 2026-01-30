@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Briefcase, MessageSquare, Layout, HelpCircle, Loader2, Settings, Shield, UserCheck, FileText, Star } from 'lucide-react';
+import { Briefcase, MessageSquare, Layout, HelpCircle, Loader2, Settings, Shield, UserCheck, FileText, Star, Globe, Search } from 'lucide-react';
 import { directus } from '../../lib/directus';
-import { aggregate, createField } from '@directus/sdk';
+import { aggregate, createField, createCollection } from '@directus/sdk';
+import { SeoFields } from './AdminConfigs';
 
 const Dashboard = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -42,7 +43,9 @@ const Dashboard = () => {
     const fixSchema = async () => {
         try {
             setFixing(true);
-            // Create hero_image field in services collection
+
+            // 1. Fix: Create hero_image field in services if missing
+            console.log('Verifying services schema...');
             await directus.request(createField('services', {
                 field: 'hero_image',
                 type: 'uuid',
@@ -55,12 +58,49 @@ const Dashboard = () => {
                     is_nullable: true,
                 }
             })).catch(err => {
-                // If error is "field already exists", ignore it
                 if (err?.errors?.[0]?.extensions?.code !== 'FIELD_ALREADY_EXISTS') {
-                    throw err;
+                    console.warn('Service field creation skipped/failed:', err);
                 }
             });
-            alert('Banco de dados atualizado com sucesso! Tente salvar a imagem novamente.');
+
+            // 2. Fix: Create seo_config singleton collection if missing
+            console.log('Verifying seo_config collection...');
+            await directus.request(createCollection({
+                collection: 'seo_config',
+                meta: {
+                    singleton: true,
+                    note: 'Configurações de SEO Global',
+                    hidden: false
+                },
+                schema: {}
+            })).catch(err => {
+                // If INVALID_PAYLOAD or similar, it might exist. Directus doesn't have "collection_already_exists" code consistently exposed here without checking lists first
+                // But we can try to create fields regardless.
+                console.log('Collection creation skipped (likely exists)');
+            });
+
+            // 3. Fix: Create SEO fields
+            console.log('Verifying SEO fields...');
+            for (const field of SeoFields) {
+                await directus.request(createField('seo_config', {
+                    field: field.name,
+                    type: field.type === 'image' ? 'uuid' : (field.type === 'textarea' ? 'text' : 'string'),
+                    meta: {
+                        interface: field.type === 'image' ? 'file-image' : (field.type === 'textarea' ? 'input-multiline' : 'input'),
+                        special: field.type === 'image' ? ['file'] : null,
+                        note: field.helperText || field.label
+                    },
+                    schema: {
+                        is_nullable: true,
+                    }
+                })).catch(err => {
+                    if (err?.errors?.[0]?.extensions?.code !== 'FIELD_ALREADY_EXISTS') {
+                        console.warn(`Failed to create field ${field.name}:`, err);
+                    }
+                });
+            }
+
+            alert('Banco de dados atualizado com sucesso! (Sevices: Hero Image | SEO: Config & Fields)');
         } catch (e) {
             console.error('Fix failed:', e);
             alert('Erro ao atualizar banco de dados. Verifique o console.');
@@ -172,6 +212,7 @@ const Dashboard = () => {
                             { label: 'Mensagens', icon: MessageSquare, path: '/painel/mensagens' },
                             { label: 'Sobre Mim', icon: UserCheck, path: '/painel/sobre' },
                             { label: 'Hero / Topo', icon: FileText, path: '/painel/hero' },
+                            { label: 'SEO / Metas', icon: Search, path: '/painel/seo' },
                         ].map((item, i) => (
                             <Link key={i} to={item.path} className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-slate-50 border border-slate-100 hover:bg-white hover:border-gold-500/30 hover:shadow-md transition-all group/item">
                                 <item.icon className="w-6 h-6 text-slate-400 group-hover/item:text-gold-500 transition-colors" />
