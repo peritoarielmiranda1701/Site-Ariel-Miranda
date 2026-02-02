@@ -144,7 +144,7 @@ const ServiceDetails: React.FC = () => {
                             <div className="lg:col-span-1">
                                 <div className="sticky top-24 space-y-6">
 
-                                    {/* Table of Contents Logic */}
+                                    {/* Table of Contents (Navigation) */}
                                     {(() => {
                                         // 1. Try Structured Data
                                         if (service.detailed_topics && service.detailed_topics.length > 0) {
@@ -174,7 +174,7 @@ const ServiceDetails: React.FC = () => {
                                             );
                                         }
 
-                                        // 2. Fallback to HTML Parsing
+                                        // 2. Fallback to HTML Parsing (Legacy)
                                         const content = service.details || '';
                                         const matches = [...content.matchAll(/<h3(.*?)>(.*?)<\/h3>/g)];
 
@@ -202,25 +202,23 @@ const ServiceDetails: React.FC = () => {
                                                 </div>
                                             );
                                         }
-
-                                        // 3. Last Resort: Summary of Features
-                                        if (service.features && service.features.length > 0) {
-                                            return (
-                                                <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-100 mb-6">
-                                                    <h4 className="font-bold text-navy-900 mb-4 border-b border-slate-100 pb-2">Resumo</h4>
-                                                    <ul className="space-y-2">
-                                                        {service.features.map((f, i) => (
-                                                            <li key={i} className="text-slate-600 text-sm flex items-start gap-2">
-                                                                <Check size={14} className="text-gold-500 mt-1 flex-shrink-0" />
-                                                                {f}
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-                                            )
-                                        }
                                         return null;
                                     })()}
+
+                                    {/* Features List (Diferenciais) - Always Show if exists */}
+                                    {service.features && service.features.length > 0 && (
+                                        <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-100 mb-6">
+                                            <h4 className="font-bold text-navy-900 mb-4 border-b border-slate-100 pb-2">Diferenciais</h4>
+                                            <ul className="space-y-2">
+                                                {service.features.map((f, i) => (
+                                                    <li key={i} className="text-slate-600 text-sm flex items-start gap-2">
+                                                        <Check size={14} className="text-gold-500 mt-1 flex-shrink-0" />
+                                                        {f}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
 
                                     <div className="bg-navy-900 p-8 rounded-lg shadow-xl text-white relative overflow-hidden">
                                         <div className="absolute top-0 right-0 w-32 h-32 bg-gold-500/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
