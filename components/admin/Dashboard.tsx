@@ -63,6 +63,42 @@ const Dashboard = () => {
                 }
             });
 
+            // 1b. Fix: Create detailed_topics (Repeater) for Services
+            console.log('Verifying services detailed_topics...');
+            await directus.request(createField('services', {
+                field: 'detailed_topics',
+                type: 'json',
+                meta: {
+                    interface: 'list',
+                    special: ['cast-json'],
+                    note: 'Seções Detalhadas (Gera o Índice Automático)',
+                    options: {
+                        fields: [
+                            {
+                                field: 'title',
+                                name: 'Título da Seção',
+                                type: 'string',
+                                meta: { interface: 'input', width: 'half' }
+                            },
+                            {
+                                field: 'content',
+                                name: 'Conteúdo Explicativo',
+                                type: 'text',
+                                meta: { interface: 'input-rich-text-html', width: 'full' }
+                            }
+                        ],
+                        add_label: 'Adicionar Seção'
+                    }
+                },
+                schema: {
+                    is_nullable: true,
+                }
+            })).catch(err => {
+                if (err?.errors?.[0]?.extensions?.code !== 'FIELD_ALREADY_EXISTS') {
+                    console.warn('Service detailed_topics fields creation skipped/failed:', err);
+                }
+            });
+
             // 2. Fix: Create seo_config singleton collection if missing
             console.log('Verifying seo_config collection...');
             await directus.request(createCollection({
