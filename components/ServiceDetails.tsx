@@ -95,89 +95,55 @@ const ServiceDetails: React.FC = () => {
                             <div className="lg:col-span-2 space-y-12">
                                 <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-slate-100">
                                     <h2 className="text-2xl font-bold text-navy-900 mb-6 font-heading">Detalhes do Serviço</h2>
-
-                                    {/* STRUCTURED CONTENT (Repeater) - Priority 1 */}
-                                    {service.detailed_topics && service.detailed_topics.length > 0 ? (
-                                        <div className="space-y-12">
-                                            {service.detailed_topics.map((topic, idx) => {
-                                                const slug = topic.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-                                                return (
-                                                    <div key={idx} id={slug} className="scroll-mt-32">
-                                                        <h3 className="text-xl font-bold text-navy-900 mb-4 font-heading flex items-center gap-3">
-                                                            <span className="w-1 h-6 bg-gold-500 rounded-full inline-block"></span>
-                                                            {topic.title}
-                                                        </h3>
-                                                        <div
-                                                            className="prose prose-slate max-w-none text-slate-600 leading-relaxed"
-                                                            dangerouslySetInnerHTML={{ __html: topic.content }}
-                                                        />
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    ) : (
-                                        /* FALLBACK: HTML Parsing (Legacy) - Priority 2 */
-                                        <div
-                                            className="prose prose-slate prose-lg max-w-none text-slate-600 [&>h3]:scroll-mt-32 [&>h2]:scroll-mt-32"
-                                            dangerouslySetInnerHTML={{
-                                                __html: (() => {
-                                                    let content = service.details || service.description || '';
-                                                    const headings = content.match(/<h3(.*?)>(.*?)<\/h3>/g);
-                                                    if (headings) {
-                                                        headings.forEach((heading) => {
-                                                            const cleanTitle = heading.replace(/<[^>]*>/g, '');
-                                                            const slug = cleanTitle.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-                                                            const newTag = `<h3 id="${slug}" class="text-xl font-bold text-navy-900 mt-8 mb-4 font-heading flex items-center gap-3"><span class="w-1 h-6 bg-gold-500 rounded-full inline-block"></span>${cleanTitle}</h3>`;
-                                                            content = content.replace(heading, newTag);
-                                                        });
-                                                    }
-                                                    if (!content.includes('<p>')) return `<p class="whitespace-pre-wrap leading-relaxed">${content}</p>`;
-                                                    return content;
-                                                })()
-                                            }}
-                                        />
-                                    )}
+                                    
+                                    {/* Dynamic Content with IDs */}
+                                    <div 
+                                        className="prose prose-slate prose-lg max-w-none text-slate-600 [&>h3]:scroll-mt-32 [&>h2]:scroll-mt-32"
+                                        dangerouslySetInnerHTML={{ 
+                                            __html: (() => {
+                                                // Automatic TOC Generation:
+                                                // 1. Get raw text
+                                                let content = service.details || service.description || '';
+                                                
+                                                // 2. Inject IDs into H3 tags for anchoring
+                                                // We regex simple h3 tags to add id="slug"
+                                                // Example: <h3>Topic Name</h3> -> <h3 id="topic-name">Topic Name</h3>
+                                                const headings = content.match(/<h3(.*?)>(.*?)<\/h3>/g);
+                                                
+                                                if (headings) {
+                                                    headings.forEach((heading) => {
+                                                        const cleanTitle = heading.replace(/<[^>]*>/g, '');
+                                                        const slug = cleanTitle
+                                                            .toLowerCase()
+                                                            .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove accents
+                                                            .replace(/[^\w\s-]/g, '') // Remove special chars
+                                                            .replace(/\s+/g, '-');
+                                                        
+                                                        const newTag = `<h3 id="${slug}" class="text-xl font-bold text-navy-900 mt-8 mb-4 font-heading flex items-center gap-3"><span class="w-1 h-6 bg-gold-500 rounded-full inline-block"></span>${cleanTitle}</h3>`;
+                                                        content = content.replace(heading, newTag);
+                                                    });
+                                                }
+                                                // Format paragraphs for better readability if simpler text
+                                                if (!content.includes('<p>')) {
+                                                    return `<p class="whitespace-pre-wrap leading-relaxed">${content}</p>`;
+                                                }
+                                                return content;
+                                            })()
+                                        }}
+                                    />
                                 </div>
                             </div>
 
                             {/* Sidebar CTA & TOC */}
                             <div className="lg:col-span-1">
                                 <div className="sticky top-24 space-y-6">
-
-                                    {/* Table of Contents (Navigation) */}
+                                    
+                                    {/* Table of Contents (Generated from Content) */}
                                     {(() => {
-                                        // 1. Try Structured Data
-                                        if (service.detailed_topics && service.detailed_topics.length > 0) {
-                                            return (
-                                                <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-100 mb-6">
-                                                    <h4 className="font-bold text-navy-900 mb-4 border-b border-slate-100 pb-2">Neste Serviço</h4>
-                                                    <nav className="flex flex-col space-y-2">
-                                                        {service.detailed_topics.map((topic, idx) => {
-                                                            const slug = topic.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-                                                            return (
-                                                                <a
-                                                                    key={idx}
-                                                                    href={`#${slug}`}
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        document.getElementById(slug)?.scrollIntoView({ behavior: 'smooth' });
-                                                                    }}
-                                                                    className="text-slate-600 hover:text-gold-600 hover:pl-2 transition-all text-sm flex items-center gap-2"
-                                                                >
-                                                                    <span className="w-1.5 h-1.5 bg-gold-500 rounded-full flex-shrink-0"></span>
-                                                                    {topic.title}
-                                                                </a>
-                                                            );
-                                                        })}
-                                                    </nav>
-                                                </div>
-                                            );
-                                        }
-
-                                        // 2. Fallback to HTML Parsing (Legacy)
                                         const content = service.details || '';
+                                        // Extract headings for the menu
                                         const matches = [...content.matchAll(/<h3(.*?)>(.*?)<\/h3>/g)];
-
+                                        
                                         if (matches.length > 0) {
                                             return (
                                                 <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-100 mb-6">
@@ -185,12 +151,20 @@ const ServiceDetails: React.FC = () => {
                                                     <nav className="flex flex-col space-y-2">
                                                         {matches.map((match, idx) => {
                                                             const cleanTitle = match[2].replace(/<[^>]*>/g, '');
-                                                            const slug = cleanTitle.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+                                                            const slug = cleanTitle
+                                                                .toLowerCase()
+                                                                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                                                                .replace(/[^\w\s-]/g, '')
+                                                                .replace(/\s+/g, '-');
+                                                            
                                                             return (
-                                                                <a
-                                                                    key={idx}
+                                                                <a 
+                                                                    key={idx} 
                                                                     href={`#${slug}`}
-                                                                    onClick={(e) => { e.preventDefault(); document.getElementById(slug)?.scrollIntoView({ behavior: 'smooth' }); }}
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        document.getElementById(slug)?.scrollIntoView({ behavior: 'smooth' });
+                                                                    }}
                                                                     className="text-slate-600 hover:text-gold-600 hover:pl-2 transition-all text-sm flex items-center gap-2"
                                                                 >
                                                                     <span className="w-1.5 h-1.5 bg-gold-500 rounded-full flex-shrink-0"></span>
@@ -202,23 +176,24 @@ const ServiceDetails: React.FC = () => {
                                                 </div>
                                             );
                                         }
+                                        // Fallback: If no headers in text, show original feature list as summary
+                                        if (service.features && service.features.length > 0) {
+                                            return (
+                                                <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-100 mb-6">
+                                                    <h4 className="font-bold text-navy-900 mb-4 border-b border-slate-100 pb-2">Resumo</h4>
+                                                    <ul className="space-y-2">
+                                                        {service.features.map((f, i) => (
+                                                            <li key={i} className="text-slate-600 text-sm flex items-start gap-2">
+                                                                <Check size={14} className="text-gold-500 mt-1 flex-shrink-0" />
+                                                                {f}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )
+                                        }
                                         return null;
                                     })()}
-
-                                    {/* Features List (Diferenciais/Resumo) - Always Show if exists */}
-                                    {service.features && Array.isArray(service.features) && service.features.length > 0 && (
-                                        <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-100 mb-6">
-                                            <h4 className="font-bold text-navy-900 mb-4 border-b border-slate-100 pb-2">Resumo</h4>
-                                            <ul className="space-y-2">
-                                                {service.features.map((f, i) => (
-                                                    <li key={i} className="text-slate-600 text-sm flex items-start gap-2">
-                                                        <Check size={14} className="text-gold-500 mt-1 flex-shrink-0" />
-                                                        {f}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
 
                                     <div className="bg-navy-900 p-8 rounded-lg shadow-xl text-white relative overflow-hidden">
                                         <div className="absolute top-0 right-0 w-32 h-32 bg-gold-500/20 rounded-full blur-3xl -mr-16 -mt-16"></div>

@@ -6,10 +6,6 @@ export interface Service {
   description: string;
   icon: LucideIcon;
   features: string[];
-  detailed_topics?: {
-    title: string;
-    content: string;
-  }[];
   details?: string;
   hero_image?: string;
 }
