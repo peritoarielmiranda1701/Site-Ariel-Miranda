@@ -20,9 +20,19 @@ export const ServiceFields: any[] = [
     { name: 'title', label: 'Título do Serviço', type: 'text', required: true },
     { name: 'icon', label: 'Nome do Ícone (Lucide)', type: 'icon', required: true, helperText: 'Ex: scale, gavel' },
     { name: 'description', label: 'Descrição Curta', type: 'textarea', required: true },
-    { name: 'features', label: 'Lista de Diferenciais', type: 'list' },
+    { name: 'features', label: 'Lista de Diferenciais (Resumo)', type: 'list' },
     { name: 'hero_image', label: 'Imagem de Cabeçalho (Fundo)', type: 'image' },
-    { name: 'details', label: 'Detalhes Completos (Modal)', type: 'textarea', required: false }
+    {
+        name: 'detailed_topics',
+        label: 'Seções Detalhadas (Índice Automático)',
+        type: 'repeater',
+        helperText: 'Adicione seções com Título e Conteúdo para gerar o índice lateral.',
+        fields: [
+            { name: 'title', label: 'Título da Seção', type: 'text', width: 'half' },
+            { name: 'content', label: 'Conteúdo', type: 'textarea', width: 'full' }
+        ]
+    },
+    { name: 'details', label: 'Detalhes (Legado/Avançado)', type: 'textarea', required: false }
 ];
 
 // --- Testimonials ---

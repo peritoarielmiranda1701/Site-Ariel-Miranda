@@ -155,7 +155,70 @@ const ItemEditor = ({ collection, title, fields, routePath }: ItemEditorProps) =
                                         </label>
                                     )}
 
-                                    {field.type === 'textarea' ? (
+                                    {/* Repeater Field Implementation */}
+                                    {field.type === 'repeater' ? (
+                                        <div className="space-y-4 p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-gold-500/30 transition-colors">
+                                            {(formData[field.name] || []).map((item: any, idx: number) => (
+                                                <div key={idx} className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-4 relative group/item animate-fade-in-up">
+                                                    <div className="flex items-center justify-between mb-2">
+                                                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Seção {idx + 1}</span>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => removeListItem(field.name, idx)}
+                                                            className="text-slate-400 hover:text-red-600 transition-colors p-1"
+                                                        >
+                                                            <X className="w-4 h-4" />
+                                                        </button>
+                                                    </div>
+
+                                                    {field.fields?.map((subField: any) => (
+                                                        <div key={subField.name}>
+                                                            <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400 mb-1 block">
+                                                                {subField.label}
+                                                            </label>
+                                                            {subField.type === 'textarea' ? (
+                                                                <textarea
+                                                                    value={item[subField.name] || ''}
+                                                                    onChange={(e) => {
+                                                                        const newList = [...(formData[field.name] || [])];
+                                                                        newList[idx] = { ...newList[idx], [subField.name]: e.target.value };
+                                                                        handleChange(field.name, newList);
+                                                                    }}
+                                                                    className="premium-input min-h-[100px] text-sm"
+                                                                    placeholder="Conteúdo..."
+                                                                />
+                                                            ) : (
+                                                                <input
+                                                                    type="text"
+                                                                    value={item[subField.name] || ''}
+                                                                    onChange={(e) => {
+                                                                        const newList = [...(formData[field.name] || [])];
+                                                                        newList[idx] = { ...newList[idx], [subField.name]: e.target.value };
+                                                                        handleChange(field.name, newList);
+                                                                    }}
+                                                                    className="premium-input text-sm"
+                                                                    placeholder="Título..."
+                                                                />
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const newList = [...(formData[field.name] || [])];
+                                                    // Initialize with empty object based on fields
+                                                    newList.push({ title: '', content: '' });
+                                                    handleChange(field.name, newList);
+                                                }}
+                                                className="flex items-center gap-2 text-xs font-bold text-navy-900 hover:text-gold-600 uppercase tracking-wider mt-4 px-6 py-4 rounded-xl hover:bg-white hover:shadow-md border border-dashed border-slate-300 hover:border-gold-500/50 transition-all w-full justify-center bg-slate-50"
+                                            >
+                                                <Plus className="w-4 h-4" />
+                                                Adicionar Seção
+                                            </button>
+                                        </div>
+                                    ) : field.type === 'textarea' ? (
                                         <textarea
                                             value={formData[field.name] || ''}
                                             onChange={(e) => handleChange(field.name, e.target.value)}
