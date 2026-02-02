@@ -93,18 +93,9 @@ const ServiceDetails: React.FC = () => {
 
                             {/* Main Content */}
                             <div className="lg:col-span-2 space-y-12">
-                                <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-slate-100">
-                                    <h2 className="text-2xl font-bold text-navy-900 mb-6 font-heading">Detalhes do Serviço</h2>
-                                    <div className="prose prose-slate prose-lg max-w-none text-slate-600">
-                                        <p className="whitespace-pre-wrap leading-relaxed">
-                                            {service.details || service.description}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Features Grid */}
+                                {/* Features Grid (Moved to Top) */}
                                 {service.features && service.features.length > 0 && (
-                                    <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-slate-100">
+                                    <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-slate-100 mb-8">
                                         <h3 className="text-xl font-bold text-navy-900 mb-8 font-heading flex items-center gap-3">
                                             <span className="w-1 h-6 bg-gold-500 rounded-full"></span>
                                             O que está incluído
@@ -121,6 +112,46 @@ const ServiceDetails: React.FC = () => {
                                         </div>
                                     </div>
                                 )}
+
+                                {/* Main Content (Details) with CTA Parser */}
+                                <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-slate-100">
+                                    <h2 className="text-2xl font-bold text-navy-900 mb-6 font-heading">Detalhes do Serviço</h2>
+                                    <div className="prose prose-slate prose-lg max-w-none text-slate-600">
+                                        {(() => {
+                                            const content = service.details || service.description || '';
+                                            // Regex to find [[CTA: Button Label]]
+                                            const parts = content.split(/(\[\[CTA:.*?\]\])/g);
+
+                                            return parts.map((part, index) => {
+                                                const ctaMatch = part.match(/\[\[CTA:\s*(.*?)\]\]/);
+
+                                                if (ctaMatch) {
+                                                    const buttonLabel = ctaMatch[1] || 'Solicitar Orçamento';
+                                                    return (
+                                                        <div key={index} className="my-8 flex justify-center not-prose">
+                                                            <button
+                                                                onClick={() => setModalOpen(true)}
+                                                                className="px-8 py-4 bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold uppercase tracking-widest rounded-lg transition-all shadow-lg shadow-gold-500/20 hover:shadow-xl hover:-translate-y-1 transform animate-fade-in"
+                                                            >
+                                                                {buttonLabel}
+                                                            </button>
+                                                        </div>
+                                                    );
+                                                }
+
+                                                // Render standard HTML content
+                                                if (!part.trim()) return null;
+
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        dangerouslySetInnerHTML={{ __html: part }}
+                                                    />
+                                                );
+                                            });
+                                        })()}
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Sidebar CTA */}
