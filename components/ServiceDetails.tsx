@@ -205,10 +205,10 @@ const ServiceDetails: React.FC = () => {
                                         return null;
                                     })()}
 
-                                    {/* Features List (Diferenciais) - Always Show if exists */}
-                                    {service.features && service.features.length > 0 && (
+                                    {/* Features List (Diferenciais/Resumo) - Always Show if exists */}
+                                    {service.features && Array.isArray(service.features) && service.features.length > 0 && (
                                         <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-100 mb-6">
-                                            <h4 className="font-bold text-navy-900 mb-4 border-b border-slate-100 pb-2">Diferenciais</h4>
+                                            <h4 className="font-bold text-navy-900 mb-4 border-b border-slate-100 pb-2">Resumo</h4>
                                             <ul className="space-y-2">
                                                 {service.features.map((f, i) => (
                                                     <li key={i} className="text-slate-600 text-sm flex items-start gap-2">
