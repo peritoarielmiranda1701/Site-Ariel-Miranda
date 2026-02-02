@@ -98,60 +98,63 @@ const ServiceDetails: React.FC = () => {
 
                                     {/* Features Grid (MOVED UP) */}
                                     {service.features && service.features.length > 0 && (
-                                        <div className="bg-slate-50 p-6 md:p-8 rounded-lg border border-slate-100 mb-8">
-                                            <h3 className="text-lg font-bold text-navy-900 mb-6 font-heading flex items-center gap-3">
-                                                <span className="w-1 h-5 bg-gold-500 rounded-full"></span>
-                                                Diferenciais e Inclusões
+                                        <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-slate-100 mb-8">
+                                            <h3 className="text-xl font-bold text-navy-900 mb-8 font-heading flex items-center gap-3">
+                                                <span className="w-1 h-6 bg-gold-500 rounded-full"></span>
+                                                O que está incluído
                                             </h3>
-                                            <div className="grid sm:grid-cols-2 gap-4">
+                                            <div className="grid sm:grid-cols-2 gap-6">
                                                 {service.features.map((feature, idx) => (
-                                                    <div key={idx} className="flex items-start gap-3">
-                                                        <div className="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-white text-gold-600 flex items-center justify-center border border-slate-100 shadow-sm">
-                                                            <Check size={12} strokeWidth={3} />
+                                                    <div key={idx} className="flex items-start gap-4 p-4 rounded-lg bg-slate-50 border border-slate-100 hover:shadow-md transition-shadow">
+                                                        <div className="mt-1 flex-shrink-0 w-6 h-6 rounded-full bg-gold-100 text-gold-600 flex items-center justify-center">
+                                                            <Check size={14} strokeWidth={3} />
                                                         </div>
-                                                        <span className="text-slate-700 font-medium text-sm leading-relaxed">{feature}</span>
+                                                        <span className="text-slate-700 font-medium">{feature}</span>
                                                     </div>
                                                 ))}
                                             </div>
                                         </div>
                                     )}
 
-                                    {/* Dynamic Content with CTA Parser */}
-                                    <div className="prose prose-slate prose-lg max-w-none text-slate-600">
-                                        {(() => {
-                                            const content = service.details || service.description || '';
-                                            // Regex to find [[CTA: Button Label]]
-                                            const parts = content.split(/(\[\[CTA:.*?\]\])/g);
+                                    {/* Dynamic Content with CTA Parser (Original Styling Wrapper) */}
+                                    <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-slate-100">
+                                        <div className="prose prose-slate prose-lg max-w-none text-slate-600">
+                                            {(() => {
+                                                const content = service.details || service.description || '';
+                                                // Regex to find [[CTA: Button Label]]
+                                                const parts = content.split(/(\[\[CTA:.*?\]\])/g);
 
-                                            return parts.map((part, index) => {
-                                                const ctaMatch = part.match(/\[\[CTA:\s*(.*?)\]\]/);
+                                                return parts.map((part, index) => {
+                                                    const ctaMatch = part.match(/\[\[CTA:\s*(.*?)\]\]/);
 
-                                                if (ctaMatch) {
-                                                    const buttonLabel = ctaMatch[1] || 'Solicitar Orçamento';
+                                                    if (ctaMatch) {
+                                                        const buttonLabel = ctaMatch[1] || 'Solicitar Orçamento';
+                                                        return (
+                                                            <div key={index} className="my-8 flex justify-center not-prose">
+                                                                <button
+                                                                    onClick={() => setModalOpen(true)}
+                                                                    className="px-8 py-4 bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold uppercase tracking-widest rounded-lg transition-colors shadow-lg shadow-gold-500/20"
+                                                                >
+                                                                    {buttonLabel}
+                                                                </button>
+                                                            </div>
+                                                        );
+                                                    }
+
+                                                    // Render standard HTML content
+                                                    if (!part.trim()) return null;
+
                                                     return (
-                                                        <div key={index} className="my-8 flex justify-center not-prose">
-                                                            <button
-                                                                onClick={() => setModalOpen(true)}
-                                                                className="px-8 py-4 bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold uppercase tracking-widest rounded-lg transition-all shadow-lg shadow-gold-500/20 hover:shadow-xl hover:-translate-y-1 transform animate-fade-in"
-                                                            >
-                                                                {buttonLabel}
-                                                            </button>
-                                                        </div>
+                                                        <div
+                                                            key={index}
+                                                            dangerouslySetInnerHTML={{ __html: part }}
+                                                        />
                                                     );
-                                                }
-
-                                                // Render standard HTML content
-                                                if (!part.trim()) return null;
-
-                                                return (
-                                                    <div
-                                                        key={index}
-                                                        dangerouslySetInnerHTML={{ __html: part }}
-                                                    />
-                                                );
-                                            });
-                                        })()}
+                                                });
+                                            })()}
+                                        </div>
                                     </div>
+
                                 </div>
 
                             </div>
