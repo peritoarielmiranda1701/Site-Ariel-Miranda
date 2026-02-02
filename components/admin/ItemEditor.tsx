@@ -8,9 +8,10 @@ import ImageUpload from './ImageUpload';
 interface FieldConfig {
     name: string;
     label: string;
-    type: 'text' | 'textarea' | 'list' | 'icon' | 'image';
+    type: 'text' | 'textarea' | 'list' | 'icon' | 'image' | 'repeater';
     required?: boolean;
     helperText?: string;
+    fields?: { name: string; label: string; type: string; width?: string }[];
 }
 
 interface ItemEditorProps {
