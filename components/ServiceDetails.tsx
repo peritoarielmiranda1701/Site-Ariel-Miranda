@@ -166,9 +166,9 @@ const ServiceDetails: React.FC = () => {
 
                                                                             <button
                                                                                 onClick={() => setModalOpen(true)}
-                                                                                className="relative z-10 w-full md:w-auto px-5 py-3 md:px-8 md:py-4 bg-navy-900 hover:bg-navy-800 text-white font-bold uppercase tracking-widest text-xs md:text-sm rounded-lg transition-all shadow-lg shadow-navy-900/20 hover:shadow-xl hover:-translate-y-1 group-hover/cta:scale-105 flex items-center justify-center gap-2 md:gap-3"
+                                                                                className="relative z-10 w-full md:w-auto px-5 py-3 md:px-8 md:py-4 bg-navy-900 hover:bg-navy-800 text-white font-bold uppercase tracking-widest text-xs md:text-sm rounded-lg transition-all shadow-lg shadow-navy-900/20 hover:shadow-xl hover:-translate-y-1 group-hover/cta:scale-105 flex items-center justify-center gap-2 md:gap-3 h-auto min-h-[44px]"
                                                                             >
-                                                                                <span className="truncate max-w-[200px] md:max-w-none">{buttonLabel}</span>
+                                                                                <span className="leading-tight text-center whitespace-normal">{buttonLabel}</span>
                                                                                 <ArrowRight size={16} className="text-gold-500 flex-shrink-0" />
                                                                             </button>
                                                                         </div>
