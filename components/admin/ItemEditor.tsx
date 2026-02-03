@@ -147,7 +147,7 @@ const ItemEditor = ({ collection, title, fields, routePath }: ItemEditorProps) =
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
                         {fields.map((field) => {
-                            const isFullWidth = field.type === 'textarea' || field.type === 'list' || field.type === 'image';
+                            const isFullWidth = field.type === 'textarea' || field.type === 'list' || field.type === 'image' || field.type === 'richtext';
                             return (
                                 <div key={field.name} className={`space-y-3 ${isFullWidth ? 'col-span-1 md:col-span-2' : 'col-span-1'} group/field`}>
                                     {field.type !== 'image' && (

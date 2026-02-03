@@ -47,7 +47,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
     return (
         <div className="bg-white text-navy-900 rounded-xl overflow-hidden border border-slate-200 hover:border-gold-500/30 transition-colors">
             {/* The container for Quill */}
-            <div ref={editorRef} style={{ height: '300px', border: 'none' }} />
+            <div ref={editorRef} style={{ height: '600px', border: 'none' }} />
         </div>
     );
 };
