@@ -120,18 +120,19 @@ const ServiceDetails: React.FC = () => {
                                         {/* Decorative top gradient line */}
                                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold-300 via-gold-500 to-gold-300"></div>
 
-                                        <h2 className="text-3xl font-bold text-navy-900 mb-8 font-heading relative inline-block">
+                                        <h2 className="text-xl font-bold text-navy-900 mb-8 font-heading relative inline-block">
                                             Detalhes e Informações
                                             <span className="absolute -bottom-2 left-0 w-1/3 h-1 bg-gold-500 rounded-full"></span>
                                         </h2>
 
                                         <div className="ql-snow">
-                                            <div className="ql-editor !p-0 !h-auto !overflow-visible prose prose-lg max-w-none 
+                                            <div className="ql-editor !p-0 !h-auto !overflow-visible prose prose-base md:prose-lg max-w-none 
                                                 prose-headings:font-heading prose-headings:font-bold prose-headings:text-navy-900 
                                                 prose-p:text-slate-600 prose-p:leading-loose prose-p:font-light
                                                 prose-strong:text-navy-800 prose-strong:font-bold
                                                 prose-ul:space-y-2 prose-li:text-slate-600 prose-li:marker:text-gold-500
                                                 prose-blockquote:border-l-4 prose-blockquote:border-gold-500 prose-blockquote:bg-gold-50/50 prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:italic prose-blockquote:text-navy-800 prose-blockquote:rounded-r-lg
+                                                break-words
                                             ">
                                                 {(() => {
                                                     const content = service.details || '';
