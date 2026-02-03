@@ -118,40 +118,42 @@ const ServiceDetails: React.FC = () => {
                                 {service.details && (
                                     <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-slate-100">
                                         <h2 className="text-2xl font-bold text-navy-900 mb-6 font-heading">Detalhes e Informações</h2>
-                                        <div className="prose prose-slate prose-lg max-w-none text-slate-600">
-                                            {(() => {
-                                                const content = service.details || '';
-                                                // Regex to find [[CTA: Button Label]]
-                                                const parts = content.split(/(\[\[CTA:.*?\]\])/g);
+                                        <div className="ql-snow">
+                                            <div className="ql-editor !p-0 !h-auto !overflow-visible prose prose-slate prose-lg max-w-none text-slate-600">
+                                                {(() => {
+                                                    const content = service.details || '';
+                                                    // Regex to find [[CTA: Button Label]]
+                                                    const parts = content.split(/(\[\[CTA:.*?\]\])/g);
 
-                                                return parts.map((part, index) => {
-                                                    const ctaMatch = part.match(/\[\[CTA:\s*(.*?)\]\]/);
+                                                    return parts.map((part, index) => {
+                                                        const ctaMatch = part.match(/\[\[CTA:\s*(.*?)\]\]/);
 
-                                                    if (ctaMatch) {
-                                                        const buttonLabel = ctaMatch[1] || 'Solicitar Orçamento';
+                                                        if (ctaMatch) {
+                                                            const buttonLabel = ctaMatch[1] || 'Solicitar Orçamento';
+                                                            return (
+                                                                <div key={index} className="my-8 flex justify-center not-prose">
+                                                                    <button
+                                                                        onClick={() => setModalOpen(true)}
+                                                                        className="px-8 py-4 bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold uppercase tracking-widest rounded-lg transition-all shadow-lg shadow-gold-500/20 hover:shadow-xl hover:-translate-y-1 transform animate-fade-in"
+                                                                    >
+                                                                        {buttonLabel}
+                                                                    </button>
+                                                                </div>
+                                                            );
+                                                        }
+
+                                                        // Render standard HTML content
+                                                        if (!part.trim()) return null;
+
                                                         return (
-                                                            <div key={index} className="my-8 flex justify-center not-prose">
-                                                                <button
-                                                                    onClick={() => setModalOpen(true)}
-                                                                    className="px-8 py-4 bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold uppercase tracking-widest rounded-lg transition-all shadow-lg shadow-gold-500/20 hover:shadow-xl hover:-translate-y-1 transform animate-fade-in"
-                                                                >
-                                                                    {buttonLabel}
-                                                                </button>
-                                                            </div>
+                                                            <div
+                                                                key={index}
+                                                                dangerouslySetInnerHTML={{ __html: part }}
+                                                            />
                                                         );
-                                                    }
-
-                                                    // Render standard HTML content
-                                                    if (!part.trim()) return null;
-
-                                                    return (
-                                                        <div
-                                                            key={index}
-                                                            dangerouslySetInnerHTML={{ __html: part }}
-                                                        />
-                                                    );
-                                                });
-                                            })()}
+                                                    });
+                                                })()}
+                                            </div>
                                         </div>
                                     </div>
                                 )}

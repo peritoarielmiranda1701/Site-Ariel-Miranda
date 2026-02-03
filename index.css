@@ -7,6 +7,12 @@
 .ql-align-right { text-align: right; }
 .ql-align-justify { text-align: justify; }
 
+/* Quill Overrides for Frontend Display */
+.ql-editor {
+  font-family: inherit !important; /* Use site's Lato/Montserrat */
+  font-size: inherit !important;
+}
+
 @layer base {
   :root {
     --color-navy-950: #0B1120;
