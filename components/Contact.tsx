@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Mail, MapPin, Phone, ArrowUpRight, Send, User, Instagram, Linkedin, MessageCircle } from 'lucide-react';
+import { Mail, MapPin, Phone, ArrowUpRight, Send, User, Instagram, Linkedin, MessageCircle, Paperclip } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
 import { SectionId } from '../types';
 import { directus } from '../lib/directus';
-import { createItem } from '@directus/sdk';
+import { createItem, uploadFiles } from '@directus/sdk';
 
 interface ContactProps {
   data?: typeof CONTACT_INFO;
@@ -17,6 +17,7 @@ const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo }) => {
     phone: '',
     message: ''
   });
+  const [file, setFile] = useState<File | null>(null);
 
   const logoUrl = logo
     ? `https://admin.peritoarielmiranda.com.br/assets/${logo}`
@@ -33,27 +34,47 @@ const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo }) => {
     });
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('submitting');
 
     try {
-      // 1. Save to Database (Directus)
+      let messageBody = formState.message;
+
+      // 1. Upload File if selected
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        // @ts-ignore
+        const fileUpload = await directus.request(uploadFiles(formData));
+
+        if (fileUpload && fileUpload.id) {
+          const fileUrl = `https://admin.peritoarielmiranda.com.br/assets/${fileUpload.id}`;
+          messageBody += `\n\n--- ANEXO ---\nArquivo: ${file.name}\nLink: ${fileUrl}`;
+        }
+      }
+
+      // 2. Save to Database (Directus)
       // @ts-ignore
       await directus.request(createItem('messages', {
         name: formState.name,
         email: formState.email,
         phone: formState.phone,
-        message: formState.message,
-        subject: `Contato do Site: ${formState.name}`,
+        message: messageBody,
+        subject: `Contato do Site: ${formState.name} ${file ? '(Com Anexo)' : ''}`,
         status: 'new'
       }));
 
       setStatus('success');
       setFormState({ name: '', email: '', phone: '', message: '' });
-
-      // Optional: Fallback to mailto if needed, but we want API first.
-      // We will rely on Directus Flows for email sending to owner.
+      setFile(null);
 
     } catch (error) {
       console.error("Erro ao enviar mensagem:", error);
@@ -251,6 +272,41 @@ const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo }) => {
                     disabled={status === 'submitting'}
                     className="w-full bg-navy-900/50 border border-navy-800 rounded-md py-3 px-4 text-white text-sm focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-all placeholder:text-slate-600 resize-none disabled:opacity-50"
                   ></textarea>
+                </div>
+
+                {/* File Upload */}
+                <div>
+                  <label className="block text-xs font-bold uppercase text-slate-400 mb-2">Anexo (Opcional)</label>
+                  <div className="flex items-center gap-4">
+                    <label
+                      htmlFor="file-upload"
+                      className="cursor-pointer flex items-center gap-2 px-4 py-3 bg-navy-900/50 border border-navy-800 rounded-md text-slate-300 hover:text-white hover:border-gold-500/50 transition-all text-sm group"
+                    >
+                      <Paperclip size={18} className="text-gold-500 group-hover:scale-110 transition-transform" />
+                      <span className="truncate max-w-[200px]">
+                        {file ? file.name : 'Escolher arquivo...'}
+                      </span>
+                      <input
+                        id="file-upload"
+                        type="file"
+                        className="hidden"
+                        onChange={handleFileChange}
+                        disabled={status === 'submitting'}
+                      />
+                    </label>
+                    {file && (
+                      <button
+                        type="button"
+                        onClick={() => setFile(null)}
+                        className="text-red-400 hover:text-red-300 text-xs uppercase font-bold"
+                      >
+                        Remover
+                      </button>
+                    )}
+                  </div>
+                  <p className="text-[10px] text-slate-500 mt-2">
+                    Formatos aceitos: PDF, JPG, PNG.
+                  </p>
                 </div>
 
                 <button
