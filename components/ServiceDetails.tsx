@@ -92,11 +92,11 @@ const ServiceDetails: React.FC = () => {
                         <div className="grid lg:grid-cols-3 gap-12">
 
                             {/* Main Content */}
-                            <div className="lg:col-span-2 space-y-12">
+                            <div className="lg:col-span-2 space-y-8 md:space-y-12 min-w-0">
 
                                 {/* 1. Features Grid (Now First) */}
                                 {service.features && service.features.length > 0 && (
-                                    <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-slate-100 mb-8">
+                                    <div className="bg-white p-6 md:p-12 rounded-lg shadow-sm border border-slate-100 mb-8">
                                         <h3 className="text-xl font-bold text-navy-900 mb-8 font-heading flex items-center gap-3">
                                             <span className="w-1 h-6 bg-gold-500 rounded-full"></span>
                                             O que está incluído
@@ -107,7 +107,7 @@ const ServiceDetails: React.FC = () => {
                                                     <div className="mt-1 flex-shrink-0 w-6 h-6 rounded-full bg-gold-100 text-gold-600 flex items-center justify-center">
                                                         <Check size={14} strokeWidth={3} />
                                                     </div>
-                                                    <span className="text-slate-700 font-medium">{feature}</span>
+                                                    <span className="text-slate-700 font-medium break-words">{feature}</span>
                                                 </div>
                                             ))}
                                         </div>
@@ -116,23 +116,26 @@ const ServiceDetails: React.FC = () => {
 
                                 {/* 2. Detailed Landing Page Content (Content After Features) */}
                                 {service.details && (
-                                    <div className="bg-white p-8 md:p-12 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden group">
+                                    <div className="bg-white p-5 md:p-12 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden group">
                                         {/* Decorative top gradient line */}
                                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold-300 via-gold-500 to-gold-300"></div>
 
-                                        <h2 className="text-xl font-bold text-navy-900 mb-8 font-heading relative inline-block">
+                                        <h2 className="text-xl font-bold text-navy-900 mb-6 md:mb-8 font-heading relative inline-block">
                                             Detalhes e Informações
                                             <span className="absolute -bottom-2 left-0 w-1/3 h-1 bg-gold-500 rounded-full"></span>
                                         </h2>
 
-                                        <div className="ql-snow">
-                                            <div className="ql-editor !p-0 !h-auto !overflow-visible prose prose-base md:prose-lg max-w-none 
+                                        <div className="ql-snow w-full max-w-full">
+                                            <div className="ql-editor !p-0 !h-auto !overflow-visible prose prose-base md:prose-lg max-w-none w-full
                                                 prose-headings:font-heading prose-headings:font-bold prose-headings:text-navy-900 
-                                                prose-p:text-slate-600 prose-p:leading-loose prose-p:font-light
+                                                prose-headings:break-words prose-headings:hyphens-auto
+                                                prose-h1:text-2xl md:prose-h1:text-4xl
+                                                prose-h2:text-xl md:prose-h2:text-3xl
+                                                prose-p:text-slate-600 prose-p:leading-loose prose-p:font-light prose-p:break-words
                                                 prose-strong:text-navy-800 prose-strong:font-bold
                                                 prose-ul:space-y-2 prose-li:text-slate-600 prose-li:marker:text-gold-500
                                                 prose-blockquote:border-l-4 prose-blockquote:border-gold-500 prose-blockquote:bg-gold-50/50 prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:italic prose-blockquote:text-navy-800 prose-blockquote:rounded-r-lg
-                                                break-words
+                                                break-words overflow-hidden
                                             ">
                                                 {(() => {
                                                     const content = service.details || '';
