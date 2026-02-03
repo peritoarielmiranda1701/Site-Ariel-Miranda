@@ -8,9 +8,10 @@ import { createItem, uploadFiles } from '@directus/sdk';
 interface ContactProps {
   data?: typeof CONTACT_INFO;
   logo?: string;
+  allowAttachments?: boolean;
 }
 
-const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo }) => {
+const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo, allowAttachments = true }) => {
   const [formState, setFormState] = useState({
     name: '',
     email: '',
@@ -274,40 +275,42 @@ const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo }) => {
                   ></textarea>
                 </div>
 
-                {/* File Upload */}
-                <div>
-                  <label className="block text-xs font-bold uppercase text-slate-400 mb-2">Anexo (Opcional)</label>
-                  <div className="flex items-center gap-4">
-                    <label
-                      htmlFor="file-upload"
-                      className="cursor-pointer flex items-center gap-2 px-4 py-3 bg-navy-900/50 border border-navy-800 rounded-md text-slate-300 hover:text-white hover:border-gold-500/50 transition-all text-sm group"
-                    >
-                      <Paperclip size={18} className="text-gold-500 group-hover:scale-110 transition-transform" />
-                      <span className="truncate max-w-[200px]">
-                        {file ? file.name : 'Escolher arquivo...'}
-                      </span>
-                      <input
-                        id="file-upload"
-                        type="file"
-                        className="hidden"
-                        onChange={handleFileChange}
-                        disabled={status === 'submitting'}
-                      />
-                    </label>
-                    {file && (
-                      <button
-                        type="button"
-                        onClick={() => setFile(null)}
-                        className="text-red-400 hover:text-red-300 text-xs uppercase font-bold"
+                {/* File Upload - Conditional */}
+                {allowAttachments && (
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-slate-400 mb-2">Anexo (Opcional)</label>
+                    <div className="flex items-center gap-4">
+                      <label
+                        htmlFor="file-upload"
+                        className="cursor-pointer flex items-center gap-2 px-4 py-3 bg-navy-900/50 border border-navy-800 rounded-md text-slate-300 hover:text-white hover:border-gold-500/50 transition-all text-sm group"
                       >
-                        Remover
-                      </button>
-                    )}
+                        <Paperclip size={18} className="text-gold-500 group-hover:scale-110 transition-transform" />
+                        <span className="truncate max-w-[200px]">
+                          {file ? file.name : 'Escolher arquivo...'}
+                        </span>
+                        <input
+                          id="file-upload"
+                          type="file"
+                          className="hidden"
+                          onChange={handleFileChange}
+                          disabled={status === 'submitting'}
+                        />
+                      </label>
+                      {file && (
+                        <button
+                          type="button"
+                          onClick={() => setFile(null)}
+                          className="text-red-400 hover:text-red-300 text-xs uppercase font-bold"
+                        >
+                          Remover
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-slate-500 mt-2">
+                      Formatos aceitos: PDF, JPG, PNG.
+                    </p>
                   </div>
-                  <p className="text-[10px] text-slate-500 mt-2">
-                    Formatos aceitos: PDF, JPG, PNG.
-                  </p>
-                </div>
+                )}
 
                 <button
                   type="submit"

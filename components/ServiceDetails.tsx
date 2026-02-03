@@ -206,7 +206,11 @@ const ServiceDetails: React.FC = () => {
                 </section>
             </main>
 
-            <Contact data={contactInfo} logo={customization.logo} />
+            <Contact
+                data={contactInfo}
+                logo={customization.logo}
+                allowAttachments={service.allow_attachments}
+            />
 
             <RequestQuoteModal
                 isOpen={isModalOpen}
