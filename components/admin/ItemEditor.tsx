@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { directus } from '../../lib/directus';
-import { createItem, readItem, updateItem } from '@directus/sdk';
+import { createItem, readItem, updateItem, createField } from '@directus/sdk';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Save, Loader2, Plus, X, HelpCircle, Edit2, AlertCircle } from 'lucide-react';
 import ImageUpload from './ImageUpload';
@@ -36,6 +36,32 @@ const ItemEditor = ({ collection, title, fields, routePath }: ItemEditorProps) =
     const isNew = id === 'novo';
 
     useEffect(() => {
+        // Auto-Schema Repair for Services: Ensure allow_attachments exists
+        if (collection === 'services') {
+            const ensureSchema = async () => {
+                try {
+                    await directus.request(createField('services', {
+                        field: 'allow_attachments',
+                        type: 'boolean',
+                        meta: {
+                            interface: 'boolean',
+                            special: ['cast-boolean'],
+                            display: 'boolean',
+                            readonly: false,
+                            hidden: false,
+                            width: 'half',
+                            note: 'Permitir envio de anexos no formulário de orçamento.'
+                        },
+                        schema: { default_value: false }
+                    }));
+                    console.log('✅ Campo allow_attachments criado com sucesso.');
+                } catch (e) {
+                    // Field likely exists, ignore error
+                }
+            };
+            ensureSchema();
+        }
+
         if (!isNew) {
             const fetchItem = async () => {
                 try {
