@@ -93,17 +93,8 @@ const ServiceDetails: React.FC = () => {
 
                             {/* Main Content */}
                             <div className="lg:col-span-2 space-y-12">
-                                {/* 1. Intro Description (Maintains existing top block) */}
-                                <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-slate-100 mb-8">
-                                    <h2 className="text-2xl font-bold text-navy-900 mb-6 font-heading">Sobre o Serviço</h2>
-                                    <div className="prose prose-slate prose-lg max-w-none text-slate-600">
-                                        <p className="whitespace-pre-wrap leading-relaxed">
-                                            {service.description}
-                                        </p>
-                                    </div>
-                                </div>
 
-                                {/* 2. Features Grid (Maintains existing middle block position) */}
+                                {/* 1. Features Grid (Now First) */}
                                 {service.features && service.features.length > 0 && (
                                     <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-slate-100 mb-8">
                                         <h3 className="text-xl font-bold text-navy-900 mb-8 font-heading flex items-center gap-3">
@@ -123,7 +114,7 @@ const ServiceDetails: React.FC = () => {
                                     </div>
                                 )}
 
-                                {/* 3. Detailed Landing Page Content (New Block at Bottom) */}
+                                {/* 2. Detailed Landing Page Content (Content After Features) */}
                                 {service.details && (
                                     <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-slate-100">
                                         <h2 className="text-2xl font-bold text-navy-900 mb-6 font-heading">Detalhes e Informações</h2>
