@@ -78,7 +78,8 @@ export function useSiteData() {
                         icon: getIcon(s.icon),
                         features: s.features,
                         details: s.details,
-                        hero_image: s.hero_image
+                        hero_image: s.hero_image,
+                        allow_attachments: s.allow_attachments
                     })));
                 }
 

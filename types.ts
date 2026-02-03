@@ -8,6 +8,7 @@ export interface Service {
   features: string[];
   details?: string;
   hero_image?: string;
+  allow_attachments?: boolean;
 }
 
 export interface Differential {
