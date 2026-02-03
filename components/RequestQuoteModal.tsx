@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { X, Send, User, Phone, Mail, MessageSquare } from 'lucide-react';
+import { X, Send, User, Phone, Mail, MessageSquare, Paperclip } from 'lucide-react';
 import { directus } from '../lib/directus';
-import { createItem } from '@directus/sdk';
+import { createItem, uploadFiles } from '@directus/sdk';
 
 interface RequestQuoteModalProps {
     isOpen: boolean;
     onClose: () => void;
     serviceTitle?: string;
+    allowAttachments?: boolean;
 }
 
-const RequestQuoteModal: React.FC<RequestQuoteModalProps> = ({ isOpen, onClose, serviceTitle }) => {
+const RequestQuoteModal: React.FC<RequestQuoteModalProps> = ({ isOpen, onClose, serviceTitle, allowAttachments }) => {
     const [formState, setFormState] = useState({
         name: '',
         email: '',
         phone: '',
         message: ''
     });
+    const [file, setFile] = useState<File | null>(null);
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
     useEffect(() => {
@@ -36,22 +38,46 @@ const RequestQuoteModal: React.FC<RequestQuoteModalProps> = ({ isOpen, onClose, 
         });
     };
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setFile(e.target.files[0]);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setStatus('submitting');
 
         try {
+            let messageBody = formState.message;
+
+            // 1. Upload File if selected and allowed
+            if (file && allowAttachments) {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                // @ts-ignore
+                const fileUpload = await directus.request(uploadFiles(formData));
+
+                if (fileUpload && fileUpload.id) {
+                    const fileUrl = `https://admin.peritoarielmiranda.com.br/assets/${fileUpload.id}`;
+                    messageBody += `\n\n--- ANEXO ---\nArquivo: ${file.name}\nLink: ${fileUrl}`;
+                }
+            }
+
+            // 2. Save Message
             await directus.request(createItem('messages' as any, {
                 name: formState.name,
                 email: formState.email,
                 phone: formState.phone,
-                message: formState.message,
-                subject: serviceTitle ? `Orçamento: ${serviceTitle}` : 'Solicitação de Orçamento',
+                message: messageBody,
+                subject: serviceTitle ? `Orçamento: ${serviceTitle} ${file ? '(Com Anexo)' : ''}` : 'Solicitação de Orçamento',
                 status: 'new'
             }));
 
             setStatus('success');
             setFormState({ name: '', email: '', phone: '', message: '' });
+            setFile(null);
         } catch (error) {
             console.error("Erro ao enviar mensagem:", error);
             setStatus('error');
@@ -167,6 +193,40 @@ const RequestQuoteModal: React.FC<RequestQuoteModalProps> = ({ isOpen, onClose, 
                                     ></textarea>
                                 </div>
                             </div>
+
+                            {/* Conditional File Upload */}
+                            {allowAttachments && (
+                                <div>
+                                    <label className="block text-xs font-bold uppercase text-slate-400 mb-2">Documento / Anexo</label>
+                                    <div className="flex items-center gap-4">
+                                        <label
+                                            htmlFor="modal-file-upload"
+                                            className="cursor-pointer flex items-center gap-2 px-4 py-3 bg-navy-900/50 border border-navy-800 rounded-lg text-slate-300 hover:text-white hover:border-gold-500/50 transition-all text-sm group w-full sm:w-auto overflow-hidden"
+                                        >
+                                            <Paperclip size={18} className="text-gold-500 group-hover:scale-110 transition-transform shrink-0" />
+                                            <span className="truncate">
+                                                {file ? file.name : 'Anexar Arquivo...'}
+                                            </span>
+                                            <input
+                                                id="modal-file-upload"
+                                                type="file"
+                                                className="hidden"
+                                                onChange={handleFileChange}
+                                                disabled={status === 'submitting'}
+                                            />
+                                        </label>
+                                        {file && (
+                                            <button
+                                                type="button"
+                                                onClick={() => setFile(null)}
+                                                className="text-red-400 hover:text-red-300 text-xs uppercase font-bold shrink-0"
+                                            >
+                                                Remover
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
 
                             <button
                                 type="submit"

@@ -8,6 +8,7 @@ export interface DirectusService {
     features: string[]; // JSON list
     details?: string;
     hero_image?: string;
+    allow_attachments?: boolean;
 }
 
 export interface DirectusTestimonial {

@@ -212,6 +212,7 @@ const ServiceDetails: React.FC = () => {
                 isOpen={isModalOpen}
                 onClose={() => setModalOpen(false)}
                 serviceTitle={service.title}
+                allowAttachments={service.allow_attachments}
             />
         </div >
     );
