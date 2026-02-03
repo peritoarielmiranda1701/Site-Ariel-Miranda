@@ -215,7 +215,7 @@ const ItemEditor = ({ collection, title, fields, routePath }: ItemEditorProps) =
                                             </div>
                                         </div>
                                     ) : field.type === 'boolean' ? (
-                                        <div className="flex items-center gap-3 p-4 bg-white rounded-xl border border-slate-200 hover:border-gold-500/30 transition-all shadow-sm">
+                                        <label className="flex items-center gap-3 p-4 bg-white rounded-xl border border-slate-200 hover:border-gold-500/30 transition-all shadow-sm cursor-pointer group/toggle">
                                             <div className="relative inline-flex items-center cursor-pointer">
                                                 <input
                                                     type="checkbox"
@@ -225,10 +225,10 @@ const ItemEditor = ({ collection, title, fields, routePath }: ItemEditorProps) =
                                                 />
                                                 <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gold-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold-500"></div>
                                             </div>
-                                            <span className="text-sm font-bold text-navy-900 uppercase tracking-wide cursor-pointer" onClick={() => handleChange(field.name, !formData[field.name])}>
+                                            <span className="text-sm font-bold text-navy-900 uppercase tracking-wide group-hover/toggle:text-gold-600 transition-colors">
                                                 {field.label}
                                             </span>
-                                        </div>
+                                        </label>
                                     ) : (
                                         <input
                                             type="text"
