@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Quill Alignment Helpers */
+.ql-align-center { text-align: center; }
+.ql-align-right { text-align: right; }
+.ql-align-justify { text-align: justify; }
+
 @layer base {
   :root {
     --color-navy-950: #0B1120;
