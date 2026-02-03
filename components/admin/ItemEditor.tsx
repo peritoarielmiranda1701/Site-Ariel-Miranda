@@ -4,11 +4,12 @@ import { createItem, readItem, updateItem } from '@directus/sdk';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Save, Loader2, Plus, X, HelpCircle, Edit2, AlertCircle } from 'lucide-react';
 import ImageUpload from './ImageUpload';
+import QuillEditor from './QuillEditor';
 
 interface FieldConfig {
     name: string;
     label: string;
-    type: 'text' | 'textarea' | 'list' | 'icon' | 'image';
+    type: 'text' | 'textarea' | 'list' | 'icon' | 'image' | 'richtext';
     required?: boolean;
     helperText?: string;
 }
@@ -162,6 +163,11 @@ const ItemEditor = ({ collection, title, fields, routePath }: ItemEditorProps) =
                                             className="premium-input min-h-[150px] resize-y"
                                             required={field.required}
                                             placeholder={field.helperText}
+                                        />
+                                    ) : field.type === 'richtext' ? (
+                                        <QuillEditor
+                                            value={formData[field.name] || ''}
+                                            onChange={(val) => handleChange(field.name, val)}
                                         />
                                     ) : field.type === 'list' ? (
                                         <div className="space-y-4 p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-gold-500/30 transition-colors">

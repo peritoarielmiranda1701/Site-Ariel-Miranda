@@ -22,7 +22,7 @@ export const ServiceFields: any[] = [
     { name: 'description', label: 'Descrição Curta', type: 'textarea', required: true },
     { name: 'features', label: 'Lista de Diferenciais', type: 'list' },
     { name: 'hero_image', label: 'Imagem de Cabeçalho (Fundo)', type: 'image' },
-    { name: 'details', label: 'Detalhes Completos (Modal)', type: 'textarea', required: false }
+    { name: 'details', label: 'Detalhes Completos (Modal)', type: 'richtext', required: false }
 ];
 
 // --- Testimonials ---
