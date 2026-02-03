@@ -103,12 +103,21 @@ const ServiceDetails: React.FC = () => {
                                         </h3>
                                         <div className="grid sm:grid-cols-2 gap-6">
                                             {service.features.map((feature, idx) => (
-                                                <div key={idx} className="flex items-start gap-4 p-4 rounded-lg bg-slate-50 border border-slate-100 hover:shadow-md transition-shadow">
-                                                    <div className="mt-1 flex-shrink-0 w-6 h-6 rounded-full bg-gold-100 text-gold-600 flex items-center justify-center">
-                                                        <Check size={14} strokeWidth={3} />
+                                                <button
+                                                    key={idx}
+                                                    onClick={() => {
+                                                        const element = document.getElementById(`item-${idx + 1}`);
+                                                        if (element) {
+                                                            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                                        }
+                                                    }}
+                                                    className="flex items-start gap-4 p-4 rounded-lg bg-slate-50 border border-slate-100 hover:shadow-md hover:bg-white hover:border-gold-200 transition-all text-left w-full group cursor-pointer"
+                                                >
+                                                    <div className="mt-1 flex-shrink-0 w-6 h-6 rounded-full bg-gold-100 text-gold-600 flex items-center justify-center group-hover:bg-gold-500 group-hover:text-white transition-colors">
+                                                        <span className="text-xs font-bold">{idx + 1}</span>
                                                     </div>
-                                                    <span className="text-slate-700 font-medium break-words">{feature}</span>
-                                                </div>
+                                                    <span className="text-slate-700 font-medium break-words group-hover:text-navy-900 transition-colors">{feature}</span>
+                                                </button>
                                             ))}
                                         </div>
                                     </div>
@@ -139,12 +148,12 @@ const ServiceDetails: React.FC = () => {
                                             ">
                                                 {(() => {
                                                     const content = service.details || '';
-                                                    // Regex to find [[CTA: Button Label]]
-                                                    const parts = content.split(/(\[\[CTA:.*?\]\])/g);
+                                                    // Regex to find [[CTA: Button Label]] or [[ITEM: number]]
+                                                    const parts = content.split(/(\[\[(?:CTA:.*?|ITEM:\d+)\]\])/g);
 
                                                     return parts.map((part, index) => {
+                                                        // Check for CTA
                                                         const ctaMatch = part.match(/\[\[CTA:\s*(.*?)\]\]/);
-
                                                         if (ctaMatch) {
                                                             const buttonLabel = ctaMatch[1] || 'Solicitar Orçamento';
                                                             return (
@@ -174,6 +183,20 @@ const ServiceDetails: React.FC = () => {
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                            );
+                                                        }
+
+                                                        // Check for ITEM anchor
+                                                        const itemMatch = part.match(/\[\[ITEM:\s*(\d+)\]\]/);
+                                                        if (itemMatch) {
+                                                            const itemNumber = itemMatch[1];
+                                                            return (
+                                                                <span
+                                                                    key={index}
+                                                                    id={`item-${itemNumber}`}
+                                                                    className="block scroll-mt-32"
+                                                                    aria-hidden="true"
+                                                                ></span>
                                                             );
                                                         }
 
