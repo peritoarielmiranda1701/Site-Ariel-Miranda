@@ -9,16 +9,16 @@ import { getOptimizedImageUrl } from '../lib/directus';
 import RequestQuoteModal from './RequestQuoteModal';
 
 const ServiceDetails: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
+    const { slug } = useParams<{ slug: string }>();
     const { services, contactInfo, customization } = useSiteData();
     const [isModalOpen, setModalOpen] = useState(false);
 
     // Scroll to top on mount
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [id]);
+    }, [slug]);
 
-    const service = services.find(s => s.id === id);
+    const service = services.find(s => s.slug === slug);
 
     if (!service) {
         return (

@@ -26,28 +26,29 @@ const FAQ: React.FC<FAQProps> = ({ data = FAQS }) => {
 
         <div className="space-y-4">
           {data.map((faq, index) => (
-            <div
-              key={faq.id}
-              className={`reveal reveal-delay-${(index % 3) * 100} bg-white rounded-lg border border-slate-200 overflow-hidden transition-all duration-300 ${openIndex === index ? 'shadow-lg border-gold-200 ring-1 ring-gold-100' : 'hover:border-slate-300'}`}
-            >
-              <button
-                onClick={() => toggleFAQ(index)}
-                className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
-              >
-                <span className={`font-bold font-heading text-lg ${openIndex === index ? 'text-navy-900' : 'text-slate-700'}`}>
-                  {faq.question}
-                </span>
-                <div className={`p-1 rounded-full ${openIndex === index ? 'bg-gold-500 text-white' : 'bg-slate-100 text-slate-500'}`}>
-                  {openIndex === index ? <Minus size={20} /> : <Plus size={20} />}
-                </div>
-              </button>
-
+            <div key={faq.id} className={`w-full reveal reveal-delay-${(index % 3) * 100}`}>
               <div
-                className={`transition-all duration-300 ease-in-out overflow-hidden ${openIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                  }`}
+                className={`bg-white rounded-lg border border-slate-200 overflow-hidden transition-all duration-300 ${openIndex === index ? 'shadow-lg border-gold-200 ring-1 ring-gold-100' : 'hover:border-slate-300'}`}
               >
-                <div className="p-6 pt-0 text-slate-600 leading-relaxed border-t border-slate-50 bg-slate-50/50">
-                  {faq.answer}
+                <button
+                  onClick={() => toggleFAQ(index)}
+                  className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
+                >
+                  <span className={`font-bold font-heading text-lg ${openIndex === index ? 'text-navy-900' : 'text-slate-700'}`}>
+                    {faq.question}
+                  </span>
+                  <div className={`p-1 rounded-full ${openIndex === index ? 'bg-gold-500 text-white' : 'bg-slate-100 text-slate-500'}`}>
+                    {openIndex === index ? <Minus size={20} /> : <Plus size={20} />}
+                  </div>
+                </button>
+
+                <div
+                  className={`transition-all duration-300 ease-in-out overflow-hidden ${openIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                >
+                  <div className="p-6 pt-0 text-slate-600 leading-relaxed border-t border-slate-50 bg-slate-50/50">
+                    {faq.answer}
+                  </div>
                 </div>
               </div>
             </div>

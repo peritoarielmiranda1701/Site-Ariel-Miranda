@@ -28,7 +28,7 @@ function App() {
         <Routes>
           {/* Public Route */}
           <Route path="/" element={<LandingPage />} />
-          <Route path="/servicos/:id" element={<ServiceDetails />} />
+          <Route path="/servicos/:slug" element={<ServiceDetails />} />
 
           {/* Admin Auth Route */}
           <Route path="/painel/login" element={<Login />} />

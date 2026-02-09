@@ -73,6 +73,12 @@ export function useSiteData() {
                 if (servicesData) {
                     setServices(servicesData.map(s => ({
                         id: String(s.id),
+                        slug: s.slug || s.title
+                            .toLowerCase()
+                            .normalize('NFD')
+                            .replace(/[\u0300-\u036f]/g, '')
+                            .replace(/[^a-z0-9]+/g, '-')
+                            .replace(/(^-|-$)/g, ''),
                         title: s.title,
                         description: s.description,
                         icon: getIcon(s.icon),

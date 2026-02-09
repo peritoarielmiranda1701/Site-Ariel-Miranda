@@ -15,6 +15,7 @@ export const NAV_LINKS = [
 export const SERVICES: Service[] = [
   {
     id: '1',
+    slug: 'engenharia-eletrica',
     title: 'Engenharia Elétrica',
     description: 'Laudos técnicos especializados para identificar causas de acidentes, falhas e irregularidades em sistemas elétricos.',
     icon: Zap,
@@ -28,6 +29,7 @@ export const SERVICES: Service[] = [
   },
   {
     id: '2',
+    slug: 'seguranca-do-trabalho',
     title: 'Segurança do Trabalho',
     description: 'Avaliação técnica de ambientes laborais para garantir conformidade com normas regulamentadoras e segurança jurídica.',
     icon: HardHat,
@@ -41,6 +43,7 @@ export const SERVICES: Service[] = [
   },
   {
     id: '3',
+    slug: 'forense-digital',
     title: 'Forense Digital',
     description: 'Coleta, preservação e análise de evidências digitais para validação de provas em processos judiciais.',
     icon: Binary,
@@ -54,6 +57,7 @@ export const SERVICES: Service[] = [
   },
   {
     id: '4',
+    slug: 'calculos-trabalhistas',
     title: 'Cálculos Trabalhistas',
     description: 'Cálculos precisos para liquidação de sentenças e suporte técnico em demandas trabalhistas complexas.',
     icon: Calculator,

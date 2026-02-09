@@ -36,7 +36,7 @@ const Services: React.FC<ServicesProps> = ({ data = SERVICES }) => {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {data.map((service, index) => (
             <Link
-              to={`/servicos/${service.id}`}
+              to={`/servicos/${service.slug}`}
               key={service.id}
               className={`reveal reveal-delay-${(index + 1) * 100} group relative bg-white p-8 rounded-sm hover:shadow-2xl hover:shadow-navy-900/5 transition-all duration-500 border border-slate-100 hover:border-gold-200 hover:-translate-y-1 flex flex-col h-full cursor-pointer`}
             >
