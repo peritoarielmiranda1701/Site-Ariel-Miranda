@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Mail, MapPin, Phone, ArrowUpRight, Send, User, Instagram, Linkedin, MessageCircle, Paperclip } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
 import { SectionId } from '../types';
-import { directus } from '../lib/directus';
+import { publicDirectus } from '../lib/directus'; // Use publicDirectus
 import { createItem, uploadFiles } from '@directus/sdk';
 
 interface ContactProps {
@@ -23,8 +23,6 @@ const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo, allowAttac
   const logoUrl = logo
     ? `https://admin.peritoarielmiranda.com.br/assets/${logo}`
     : "https://cache2net3.com/Repositorio/19349/Logo/LOGO.png";
-
-
 
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
@@ -47,36 +45,51 @@ const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo, allowAttac
 
     try {
       let messageBody = formState.message;
-
-      let uploadedFileId: string | undefined;
+      let uploadedFileId: string | null = null; // Initialize as null
 
       // 1. Upload File if selected
       if (file) {
+        console.log("Iniciando upload do arquivo...");
         const formData = new FormData();
         formData.append('file', file);
 
+        // Upload using publicDirectus
         // @ts-ignore
-        const fileUpload = await directus.request(uploadFiles(formData));
+        const fileUpload = await publicDirectus.request(uploadFiles(formData));
 
         if (fileUpload && fileUpload.id) {
           uploadedFileId = fileUpload.id;
+          console.log("Upload sucesso. ID:", uploadedFileId);
+
           const fileUrl = `https://admin.peritoarielmiranda.com.br/assets/${fileUpload.id}`;
           messageBody += `\n\n--- ANEXO ---\nArquivo: ${file.name}\nLink: ${fileUrl}`;
+        } else {
+          console.warn("Upload retornou sucesso mas sem ID?", fileUpload);
         }
       }
 
-      // 2. Save to Database (Directus)
-      // @ts-ignore
-      await directus.request(createItem('messages', {
+      // 2. Build Payload
+      const payload: any = {
         name: formState.name,
         email: formState.email,
         phone: formState.phone,
         message: messageBody,
         subject: `Contato do Site: ${formState.name} ${file ? '(Com Anexo)' : ''}`,
-        status: 'new',
-        attachment: uploadedFileId // Envia o ID do arquivo para o campo 'attachment'
-      }));
+        status: 'new'
+      };
 
+      // Explicitly add attachment if it exists
+      if (uploadedFileId) {
+        payload.attachment = uploadedFileId;
+      }
+
+      console.log("Enviando Payload para mensagens:", payload);
+
+      // 3. Save to Database
+      // @ts-ignore
+      await publicDirectus.request(createItem('messages', payload));
+
+      console.log("Mensagem salva com sucesso!");
       setStatus('success');
       setFormState({ name: '', email: '', phone: '', message: '' });
       setFile(null);
@@ -321,7 +334,7 @@ const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo, allowAttac
                   disabled={status === 'submitting'}
                   className="w-full bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-white font-bold uppercase tracking-widest py-4 rounded-md shadow-lg shadow-gold-900/20 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 text-xs disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  {status === 'submitting' ? 'Enviando...' : 'Enviar Mensagem (Update)'} <Send size={16} />
+                  {status === 'submitting' ? 'Enviando...' : 'Enviar Mensagem (v3 Fix)'} <Send size={16} />
                 </button>
 
                 {status === 'error' && (
