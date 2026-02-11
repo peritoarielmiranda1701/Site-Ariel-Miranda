@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Send, User, Phone, Mail, MessageSquare, Paperclip } from 'lucide-react';
-import { directus } from '../lib/directus';
+import { publicDirectus } from '../lib/directus'; // Use publicDirectus
 import { createItem, uploadFiles } from '@directus/sdk';
 
 interface RequestQuoteModalProps {
@@ -50,30 +50,44 @@ const RequestQuoteModal: React.FC<RequestQuoteModalProps> = ({ isOpen, onClose, 
 
         try {
             let messageBody = formState.message;
+            let uploadedFileId: string | null = null; // Initialize as null
 
             // 1. Upload File if selected and allowed
             if (file && allowAttachments) {
+                console.log("Iniciando upload modal...");
                 const formData = new FormData();
                 formData.append('file', file);
 
                 // @ts-ignore
-                const fileUpload = await directus.request(uploadFiles(formData));
+                const fileUpload = await publicDirectus.request(uploadFiles(formData));
 
                 if (fileUpload && fileUpload.id) {
+                    uploadedFileId = fileUpload.id;
                     const fileUrl = `https://admin.peritoarielmiranda.com.br/assets/${fileUpload.id}`;
                     messageBody += `\n\n--- ANEXO ---\nArquivo: ${file.name}\nLink: ${fileUrl}`;
                 }
             }
 
-            // 2. Save Message
-            await directus.request(createItem('messages' as any, {
+            // 2. Build Payload
+            const payload: any = {
                 name: formState.name,
                 email: formState.email,
                 phone: formState.phone,
                 message: messageBody,
                 subject: serviceTitle ? `Orçamento: ${serviceTitle} ${file ? '(Com Anexo)' : ''}` : 'Solicitação de Orçamento',
                 status: 'new'
-            }));
+            };
+
+            // Explicitly add attachment field
+            if (uploadedFileId) {
+                payload.attachment = uploadedFileId;
+            }
+
+            console.log("Enviando Payload Modal:", payload);
+
+            // 3. Save Message
+            // @ts-ignore
+            await publicDirectus.request(createItem('messages', payload));
 
             setStatus('success');
             setFormState({ name: '', email: '', phone: '', message: '' });
@@ -236,7 +250,7 @@ const RequestQuoteModal: React.FC<RequestQuoteModalProps> = ({ isOpen, onClose, 
                                 {status === 'submitting' ? (
                                     'Enviando...'
                                 ) : (
-                                    <>Enviar Solicitação <Send size={16} className="group-hover:translate-x-1 transition-transform" /></>
+                                    <>Enviar Solicitação (v3 Fix) <Send size={16} className="group-hover:translate-x-1 transition-transform" /></>
                                 )}
                             </button>
 
