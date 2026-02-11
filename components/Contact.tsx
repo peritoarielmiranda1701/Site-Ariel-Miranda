@@ -48,6 +48,8 @@ const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo, allowAttac
     try {
       let messageBody = formState.message;
 
+      let uploadedFileId: string | undefined;
+
       // 1. Upload File if selected
       if (file) {
         const formData = new FormData();
@@ -57,6 +59,7 @@ const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo, allowAttac
         const fileUpload = await directus.request(uploadFiles(formData));
 
         if (fileUpload && fileUpload.id) {
+          uploadedFileId = fileUpload.id;
           const fileUrl = `https://admin.peritoarielmiranda.com.br/assets/${fileUpload.id}`;
           messageBody += `\n\n--- ANEXO ---\nArquivo: ${file.name}\nLink: ${fileUrl}`;
         }
@@ -70,7 +73,8 @@ const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo, allowAttac
         phone: formState.phone,
         message: messageBody,
         subject: `Contato do Site: ${formState.name} ${file ? '(Com Anexo)' : ''}`,
-        status: 'new'
+        status: 'new',
+        attachment: uploadedFileId // Envia o ID do arquivo para o campo 'attachment'
       }));
 
       setStatus('success');
