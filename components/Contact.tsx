@@ -321,7 +321,7 @@ const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo, allowAttac
                   disabled={status === 'submitting'}
                   className="w-full bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-white font-bold uppercase tracking-widest py-4 rounded-md shadow-lg shadow-gold-900/20 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 text-xs disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  {status === 'submitting' ? 'Enviando...' : 'Enviar Mensagem'} <Send size={16} />
+                  {status === 'submitting' ? 'Enviando...' : 'Enviar Mensagem (Update)'} <Send size={16} />
                 </button>
 
                 {status === 'error' && (

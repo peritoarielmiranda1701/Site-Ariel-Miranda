@@ -72,7 +72,16 @@ interface Schema {
     hero_stats: DirectusHeroStats; // Singleton
     seo_config: any; // Singleton
     about_section: any; // Singleton
-    messages: any[]; // Collection
+    messages: {
+        id: number;
+        name: string;
+        email: string;
+        phone: string;
+        message: string;
+        subject: string;
+        status: string;
+        attachment?: string; // UUID of the file
+    }[]; // Collection
 }
 
 // Client for Authenticated Admin Actions
