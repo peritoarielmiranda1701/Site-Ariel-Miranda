@@ -72,7 +72,7 @@ const RequestQuoteModal: React.FC<RequestQuoteModalProps> = ({ isOpen, onClose, 
                 email: formState.email,
                 phone: formState.phone,
                 message: messageBody,
-                subject: serviceTitle ? `Orçamento: ${serviceTitle} ${file ? '(Com Anexo)' : ''}` : 'Solicitação de Orçamento',
+                subject: serviceTitle || 'Solicitação de Orçamento',
                 status: 'new'
             };
 
@@ -248,7 +248,7 @@ const RequestQuoteModal: React.FC<RequestQuoteModalProps> = ({ isOpen, onClose, 
                                 {status === 'submitting' ? (
                                     'Enviando...'
                                 ) : (
-                                    <>Enviar Solicitação (v3 Fix) <Send size={16} className="group-hover:translate-x-1 transition-transform" /></>
+                                    <>Enviar Solicitação <Send size={16} className="group-hover:translate-x-1 transition-transform" /></>
                                 )}
                             </button>
 

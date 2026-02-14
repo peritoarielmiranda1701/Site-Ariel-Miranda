@@ -165,7 +165,7 @@ async function main() {
       resolve: readFileOp.id,
       options: {
         to: "contato@peritoarielmiranda.com.br",
-        subject: "{{read_message.subject}}",
+        subject: "Novo Orçamento: {{read_message.subject}}",
         body: emailBodyWithLink
         // NO attachments array here, just the link in body
       }
@@ -226,7 +226,7 @@ async function main() {
       reject: conditionOp.id,
       options: {
         to: "contato@peritoarielmiranda.com.br",
-        subject: "{{read_message.subject}}",
+        subject: "Novo Orçamento: {{read_message.subject}}",
         body: emailBodySimple
       }
     }));
