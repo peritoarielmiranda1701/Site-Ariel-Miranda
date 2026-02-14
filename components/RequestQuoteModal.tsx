@@ -63,8 +63,6 @@ const RequestQuoteModal: React.FC<RequestQuoteModalProps> = ({ isOpen, onClose, 
 
                 if (fileUpload && fileUpload.id) {
                     uploadedFileId = fileUpload.id;
-                    const fileUrl = `https://admin.peritoarielmiranda.com.br/assets/${fileUpload.id}`;
-                    messageBody += `\n\n--- ANEXO ---\nArquivo: ${file.name}\nLink: ${fileUrl}`;
                 }
             }
 

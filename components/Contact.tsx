@@ -60,9 +60,6 @@ const Contact: React.FC<ContactProps> = ({ data = CONTACT_INFO, logo, allowAttac
         if (fileUpload && fileUpload.id) {
           uploadedFileId = fileUpload.id;
           console.log("Upload sucesso. ID:", uploadedFileId);
-
-          const fileUrl = `https://admin.peritoarielmiranda.com.br/assets/${fileUpload.id}`;
-          messageBody += `\n\n--- ANEXO ---\nArquivo: ${file.name}\nLink: ${fileUrl}`;
         } else {
           console.warn("Upload retornou sucesso mas sem ID?", fileUpload);
         }

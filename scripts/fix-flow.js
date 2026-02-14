@@ -44,7 +44,18 @@ async function main() {
         const currentOptions = operation.options || {};
         const newOptions = {
             ...currentOptions,
-            attachments: "{{$trigger.payload.attachment}}" // THE FIX
+            attachments: ["{{$trigger.payload.attachment}}"], // THE FIX: ARRAY
+            body: `
+            <p>Olá <strong>Ariel</strong>,</p>
+            <p>Você recebeu uma nova solicitação de orçamento do site.</p>
+            <p><strong>Nome:</strong> {{ $trigger.payload.name }}</p>
+            <p><strong>E-mail:</strong> {{ $trigger.payload.email }}</p>
+            <p><strong>Telefone:</strong> {{ $trigger.payload.phone }}</p>
+            <p><strong>Assunto:</strong> {{ $trigger.payload.subject }}</p>
+            <p><strong>Mensagem:</strong><br>{{ $trigger.payload.message }}</p>
+            <hr>
+            <p style="color: red; font-weight: bold;">[DEBUG] Attachment ID: {{ $trigger.payload.attachment }}</p>
+            `
         };
 
         console.log("Aplicando correção...");
