@@ -50,6 +50,13 @@ export function useSiteData() {
             accent: ''
         }
     });
+    const [popup, setPopup] = useState({
+        enabled: false,
+        video_file: '',
+        title: '',
+        subtitle: '',
+        cta_text: 'Continuar navegando no site'
+    });
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -58,7 +65,7 @@ export function useSiteData() {
 
         async function fetchData() {
             try {
-                const [servicesData, testimonialsData, faqsData, processData, infoData, heroData, differentialsData, aboutData, seoData] = await Promise.all([
+                const [servicesData, testimonialsData, faqsData, processData, infoData, heroData, differentialsData, aboutData, seoData, popupData] = await Promise.all([
                     publicDirectus.request(readItems('services')).catch(e => { console.error('Error fetching services:', e); return null; }),
                     publicDirectus.request(readItems('testimonials')).catch(e => { console.error('Error fetching testimonials:', e); return null; }),
                     publicDirectus.request(readItems('faqs')).catch(e => { console.error('Error fetching faqs:', e); return null; }),
@@ -67,7 +74,8 @@ export function useSiteData() {
                     publicDirectus.request(readSingleton('hero_stats')).catch(e => { console.error('Error fetching hero_stats:', e); return null; }),
                     publicDirectus.request(readItems('differentials')).catch(e => { console.error('Error fetching differentials:', e); return null; }),
                     publicDirectus.request(readSingleton('about_section' as any)).catch(e => { console.error('Error fetching about_section:', e); return null; }),
-                    publicDirectus.request(readSingleton('seo_config' as any)).catch(e => { console.error('Error fetching seo_config:', e); return null; })
+                    publicDirectus.request(readSingleton('seo_config' as any)).catch(e => { console.error('Error fetching seo_config:', e); return null; }),
+                    publicDirectus.request(readSingleton('popup_config' as any)).catch(e => { console.error('Error fetching popup_config:', e); return null; })
                 ]);
 
                 if (servicesData) {
@@ -218,6 +226,17 @@ export function useSiteData() {
                     });
                 }
 
+                if (popupData) {
+                    const p = popupData as any;
+                    setPopup({
+                        enabled: Boolean(p.enabled),
+                        video_file: p.video_file || '',
+                        title: p.title || '',
+                        subtitle: p.subtitle || '',
+                        cta_text: p.cta_text || 'Continuar navegando no site'
+                    });
+                }
+
             } catch (error) {
                 console.error("❌ Failed to fetch CMS data, using defaults:", error);
             } finally {
@@ -238,5 +257,5 @@ export function useSiteData() {
         }
     }, [loading, services, differentials]);
 
-    return { services, testimonials, differentials, faqs, processSteps, contactInfo, stats, hero, seo, about, customization, loading };
+    return { services, testimonials, differentials, faqs, processSteps, contactInfo, stats, hero, seo, about, customization, popup, loading };
 }

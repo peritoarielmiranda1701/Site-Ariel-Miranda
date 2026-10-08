@@ -3,11 +3,12 @@ import { directus } from '../../lib/directus';
 import { readSingleton, updateSingleton } from '@directus/sdk';
 import { Save, Loader2, PenTool, Monitor, AlertCircle, Check, Database } from 'lucide-react';
 import ImageUpload from './ImageUpload';
+import VideoUpload from './VideoUpload';
 
 interface FieldConfig {
     name: string;
     label: string;
-    type: 'text' | 'textarea' | 'image' | 'number' | 'color';
+    type: 'text' | 'textarea' | 'image' | 'video' | 'number' | 'color' | 'boolean';
     required?: boolean;
     section?: string; // For grouping fields
     helperText?: string;
@@ -55,9 +56,14 @@ const SingletonEditor = ({ collection, title, fields }: SingletonEditorProps) =>
         setSuccessMsg(false);
 
         try {
+            // Clean payload to ensure id is not sent as null (Directus singletons fail validation if id: null is sent)
+            const payload = { ...formData };
+            if (payload.id === null || payload.id === undefined) {
+                delete payload.id;
+            }
+
             // @ts-ignore
-            await directus.request(updateSingleton(collection, formData));
-            // setMessage('Alterações salvas com sucesso!');
+            await directus.request(updateSingleton(collection, payload));
             setSuccessMsg(true);
 
             // Auto hide message
@@ -146,6 +152,43 @@ const SingletonEditor = ({ collection, title, fields }: SingletonEditorProps) =>
                                                                 className="premium-input min-h-[150px] resize-y"
                                                                 placeholder={`Digite ${field.label.toLowerCase()}...`}
                                                             />
+                                                        ) : field.type === 'video' ? (
+                                                            <div className="space-y-4">
+                                                                <label className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400 flex items-center gap-1 pl-1">
+                                                                    {field.label} {field.required && <span className="text-red-500">*</span>}
+                                                                </label>
+                                                                <div className="bg-white rounded-2xl border border-slate-200 p-3 shadow-sm hover:border-gold-500/50 transition-all">
+                                                                    <VideoUpload
+                                                                        value={formData[field.name]}
+                                                                        onChange={(value) => handleChange(field.name, value)}
+                                                                        uid={field.name}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        ) : field.type === 'boolean' ? (
+                                                            <div className="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-gold-500/50 transition-all">
+                                                                <div>
+                                                                    <span className="text-sm font-bold text-navy-900 block">{field.label}</span>
+                                                                    {field.helperText && (
+                                                                        <span className="text-xs text-slate-500 mt-0.5 block">{field.helperText}</span>
+                                                                    )}
+                                                                </div>
+                                                                <button
+                                                                    type="button"
+                                                                    role="switch"
+                                                                    aria-checked={Boolean(formData[field.name])}
+                                                                    onClick={() => handleChange(field.name, !formData[field.name])}
+                                                                    className={`relative inline-flex h-7 w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                                                        formData[field.name] ? 'bg-gold-500' : 'bg-slate-300'
+                                                                    }`}
+                                                                >
+                                                                    <span
+                                                                        className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                                                                            formData[field.name] ? 'translate-x-7' : 'translate-x-0'
+                                                                        }`}
+                                                                    />
+                                                                </button>
+                                                            </div>
                                                         ) : field.type === 'image' ? (
                                                             <div className="space-y-4">
                                                                 <label className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400 flex items-center gap-1 pl-1">

@@ -18,7 +18,8 @@ import {
   MessageColumns, MessageFields,
   InfoFields, HeroFields, SeoFields, AboutFields,
   ProcessStepColumns, ProcessStepFields,
-  DifferentialColumns, DifferentialFields
+  DifferentialColumns, DifferentialFields,
+  PopupFields
 } from './components/admin/AdminConfigs';
 
 function App() {
@@ -154,6 +155,14 @@ function App() {
                 collection="about_section"
                 title="Sobre / Quem Sou"
                 fields={AboutFields}
+              />
+            } />
+
+            <Route path="popup" element={
+              <SingletonEditor
+                collection="popup_config"
+                title="Vídeo de Entrada / Popup"
+                fields={PopupFields}
               />
             } />
 

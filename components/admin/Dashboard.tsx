@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Briefcase, MessageSquare, Layout, HelpCircle, Loader2, Settings, Shield, UserCheck, FileText, Star, Globe, Search } from 'lucide-react';
 import { directus } from '../../lib/directus';
 import { aggregate, createField, createCollection, createItem, readPolicies, createPermission, readPermissions } from '@directus/sdk';
-import { SeoFields } from './AdminConfigs';
+import { SeoFields, PopupFields } from './AdminConfigs';
 
 const Dashboard = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -101,14 +101,61 @@ const Dashboard = () => {
             // 4. Fix: Ensure Singleton Row Exists
             console.log('Verifying SEO singleton row...');
             try {
-                // Try to create an initial item. If it works, great. If it fails (singleton violation or whatever), we assume it exists.
-                // However, updated "createItem" for singletons might force creation if empty.
                 await directus.request(createItem('seo_config', {
                     site_title: 'Perito Ariel Miranda',
                     site_description: 'Site oficial'
                 })).catch((err) => {
-                    // Ignore errors if it already exists (usually 200 OK with singletons if creates? or 400 forbidden)
                     console.log('Row creation skipped (likely exists)');
+                });
+            } catch (e) { }
+
+            // 4b. Fix: Create popup_config singleton collection if missing
+            console.log('Verifying popup_config collection...');
+            await directus.request(createCollection({
+                collection: 'popup_config',
+                meta: {
+                    singleton: true,
+                    note: 'Configurações do Popup de Boas-Vindas com Vídeo',
+                    hidden: false
+                },
+                schema: {}
+            })).catch(() => {
+                console.log('popup_config collection existing or creation skipped');
+            });
+
+            // 4c. Fix: Create Popup fields
+            console.log('Verifying Popup fields...');
+            for (const field of PopupFields) {
+                const fieldType = field.type === 'video' ? 'uuid' : (field.type === 'boolean' ? 'boolean' : (field.type === 'textarea' ? 'text' : 'string'));
+                const interfaceType = field.type === 'video' ? 'file' : (field.type === 'boolean' ? 'boolean' : (field.type === 'textarea' ? 'input-multiline' : 'input'));
+
+                await directus.request(createField('popup_config', {
+                    field: field.name,
+                    type: fieldType,
+                    meta: {
+                        interface: interfaceType,
+                        special: field.type === 'video' ? ['file'] : null,
+                        note: field.helperText || field.label
+                    },
+                    schema: {
+                        is_nullable: true,
+                        default_value: field.type === 'boolean' ? false : null
+                    }
+                })).catch(err => {
+                    if (err?.errors?.[0]?.extensions?.code !== 'FIELD_ALREADY_EXISTS') {
+                        console.warn(`Failed to create field ${field.name} in popup_config:`, err);
+                    }
+                });
+            }
+
+            // 4d. Fix: Ensure popup_config initial row exists
+            try {
+                await directus.request(createItem('popup_config', {
+                    enabled: false,
+                    title: 'Bem-vindo ao site',
+                    cta_text: 'Continuar navegando no site'
+                })).catch(() => {
+                    console.log('Popup row creation skipped (likely exists)');
                 });
             } catch (e) { }
 
@@ -117,7 +164,7 @@ const Dashboard = () => {
 
             // @ts-ignore - Import might be missing in some SDK versions, but assuming standard v13+
             const policies = await directus.request(readPolicies({
-                filter: { name: { _eq: 'Public' } }
+                filter: { name: { _in: ['Public', '$t:public_label'] } }
             }));
 
             const publicPolicy = policies[0];
@@ -143,6 +190,27 @@ const Dashboard = () => {
                         console.log('Public Read Permission granted for seo_config');
                     } else {
                         console.log('Permissions already exist for seo_config');
+                    }
+
+                    // 5a. Fix: Public Permissions for popup_config
+                    const popupPermissions = await directus.request(readPermissions({
+                        filter: {
+                            policy: { _eq: publicPolicy.id },
+                            collection: { _eq: 'popup_config' },
+                            action: { _eq: 'read' }
+                        }
+                    }));
+
+                    if (popupPermissions.length === 0) {
+                        await directus.request(createPermission({
+                            policy: publicPolicy.id,
+                            collection: 'popup_config',
+                            action: 'read',
+                            fields: ['*']
+                        }));
+                        console.log('Public Read Permission granted for popup_config');
+                    } else {
+                        console.log('Permissions already exist for popup_config');
                     }
 
                     // 5b. Fix: Public Permissions for FILES (Images)

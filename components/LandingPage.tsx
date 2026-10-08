@@ -11,6 +11,7 @@ import ClientFeedback from './ClientFeedback';
 import CTA from './CTA';
 import Contact from './Contact';
 import SEOHeader from './SEOHeader';
+import VideoPopupModal from './VideoPopupModal';
 
 import { useSiteData } from '../hooks/useSiteData';
 
@@ -25,10 +26,30 @@ function LandingPage() {
         stats,
         hero,
         seo,
-
         about,
-        customization // New
+        customization,
+        popup
     } = useSiteData();
+
+    const [isPopupOpen, setIsPopupOpen] = React.useState(false);
+
+    // Trigger popup on entrance if enabled and not seen in this session
+    React.useEffect(() => {
+        if (popup?.enabled && popup?.video_file) {
+            const hasSeen = sessionStorage.getItem('popup_video_seen');
+            if (!hasSeen) {
+                const timer = setTimeout(() => {
+                    setIsPopupOpen(true);
+                }, 600);
+                return () => clearTimeout(timer);
+            }
+        }
+    }, [popup?.enabled, popup?.video_file]);
+
+    const handleClosePopup = () => {
+        setIsPopupOpen(false);
+        sessionStorage.setItem('popup_video_seen', 'true');
+    };
 
     // Inject Custom Colors & Favicon
     React.useEffect(() => {
@@ -84,6 +105,16 @@ function LandingPage() {
                 <CTA />
             </main>
             <Contact data={contactInfo} logo={customization.logo} />
+
+            {/* Welcome Video Popup Modal */}
+            <VideoPopupModal
+                isOpen={isPopupOpen}
+                onClose={handleClosePopup}
+                videoFileId={popup?.video_file}
+                title={popup?.title}
+                subtitle={popup?.subtitle}
+                ctaText={popup?.cta_text}
+            />
         </div>
     );
 }

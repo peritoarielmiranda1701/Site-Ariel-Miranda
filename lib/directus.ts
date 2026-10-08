@@ -62,6 +62,14 @@ export interface DirectusDifferential {
     icon: string;
 }
 
+export interface DirectusPopupConfig {
+    enabled?: boolean;
+    video_file?: string;
+    title?: string;
+    subtitle?: string;
+    cta_text?: string;
+}
+
 interface Schema {
     services: DirectusService[];
     testimonials: DirectusTestimonial[];
@@ -72,6 +80,7 @@ interface Schema {
     hero_stats: DirectusHeroStats; // Singleton
     seo_config: any; // Singleton
     about_section: any; // Singleton
+    popup_config: DirectusPopupConfig; // Singleton
     messages: {
         id: number;
         name: string;

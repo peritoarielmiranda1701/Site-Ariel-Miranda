@@ -5,7 +5,7 @@ import { getAssetUrl } from '../../lib/directus';
 import { Navigate, Outlet, NavLink } from 'react-router-dom';
 import {
     LayoutDashboard, Briefcase, MessageSquare,
-    HelpCircle, Settings, LogOut, FileText, Loader2, Search, UserCheck, Monitor, Crown, Star
+    HelpCircle, Settings, LogOut, FileText, Loader2, Search, UserCheck, Monitor, Crown, Star, Video
 } from 'lucide-react';
 
 const SidebarLink = ({ to, icon: Icon, label, end = false }: { to: string, icon: any, label: string, end?: boolean }) => (
@@ -98,6 +98,7 @@ const AdminLayout = () => {
                     <SidebarSection title="Gestão de Conteúdo">
                         <SidebarLink to="/painel/hero" icon={FileText} label="Topo & Stats" />
                         <SidebarLink to="/painel/sobre" icon={UserCheck} label="Sobre / Quem Sou" />
+                        <SidebarLink to="/painel/popup" icon={Video} label="Popup com Vídeo" />
                         <SidebarLink to="/painel/servicos" icon={Briefcase} label="Serviços Oferecidos" />
                         <SidebarLink to="/painel/diferenciais" icon={Star} label="Diferenciais" />
                         <SidebarLink to="/painel/processo" icon={FileText} label="Fluxo de Trabalho" />

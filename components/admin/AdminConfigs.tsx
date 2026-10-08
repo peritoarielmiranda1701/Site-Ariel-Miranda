@@ -189,3 +189,43 @@ export const MessageFields: any[] = [
     { name: 'subject', label: 'Assunto', type: 'text', readOnly: true },
     { name: 'message', label: 'Mensagem', type: 'textarea', readOnly: true },
 ];
+
+// --- Popup de Vídeo / Boas-Vindas ---
+export const PopupFields: any[] = [
+    {
+        name: 'enabled',
+        label: 'Exibir Popup ao Acessar o Site',
+        type: 'boolean',
+        section: 'Status',
+        helperText: 'Ative para mostrar o popup com vídeo para os visitantes ao entrarem no site.'
+    },
+    {
+        name: 'video_file',
+        label: 'Vídeo do Popup',
+        type: 'video',
+        section: 'Vídeo',
+        helperText: 'Faça upload do arquivo de vídeo (MP4, WebM ou MOV).'
+    },
+    {
+        name: 'title',
+        label: 'Título do Popup (Opcional)',
+        type: 'text',
+        section: 'Textos & Chamadas',
+        helperText: 'Ex: Conheça nossa atuação em perícias técnicas e judiciais'
+    },
+    {
+        name: 'subtitle',
+        label: 'Mensagem / Subtítulo (Opcional)',
+        type: 'textarea',
+        section: 'Textos & Chamadas',
+        helperText: 'Breve texto explicativo para contextualizar o visitante.'
+    },
+    {
+        name: 'cta_text',
+        label: 'Texto do Botão de Fechar / Ação (Opcional)',
+        type: 'text',
+        section: 'Textos & Chamadas',
+        helperText: 'Padrão: "Continuar navegando no site"'
+    }
+];
+
